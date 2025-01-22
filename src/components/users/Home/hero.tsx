@@ -2,7 +2,7 @@ import React from 'react'
 
 function Hero() {
   return (
-    <div>
+    <div className='bg-gray-600'>
       Hero
     </div>
   )
