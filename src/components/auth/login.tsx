@@ -1,15 +1,30 @@
+"use client";
 import { Button } from "@mui/material";
 import React from "react";
 import Link from "next/link";
+import { FcGoogle } from "react-icons/fc";
+import { signOut } from "next-auth/react";
 
 function Login() {
   return (
     <div className="flex h-screen items-center justify-center bg-gray-100">
       <div className="flex w-full max-w-2xl sm:h-4/6 bg-gray-50 shadow-lg flex-col sm:flex-row">
         <div className="w-full sm:w-1/2 px-8 py-12 sm:p-8">
+          <button
+            type="button"
+            className="w-full bg-white border border-gray-300 text-black py-2 rounded-full hover:bg-gray-100 mb-2 text-sm"
+            onClick={() => {
+
+              signOut();
+            }}
+          >
+            <FcGoogle size={25} className="mr-2 float-end" />
+            logout
+          </button>
           <h2 className="text-xl font-bold text-center text-gray-700 mb-2">
             WELCOME BACK
           </h2>
+
           <p className="text-center text-xs  text-gray-400 mb-6">
             Please enter your credentials to log in.
           </p>
