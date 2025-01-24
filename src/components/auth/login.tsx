@@ -57,7 +57,7 @@ function Login() {
 
           <div className="sm:hidden mt-2 flex flex-col items-center justify-center space-y-4">
             <p className="text-gray-700 mt-3 text-base font-medium">
-              Don't have an account yet?
+              Dont have an account yet?
             </p>
             <Link href="/create-account" passHref>
               <p className="px-5 py-3 text-sm font-semibold text-white bg-green-500 rounded-md shadow hover:bg-green-600 focus:ring-2 focus:ring-green-300 focus:outline-none">
@@ -70,7 +70,7 @@ function Login() {
         <div className="hidden sm:flex w-full sm:w-1/2 p-8 bg-gradient-to-b from-custom-green-100 via-custom-green-200 to-custom-green-300 items-center justify-center h-full sm:h-auto">
           <div className="text-center">
             <p className="text-white text-2xl sm:text-xl font-medium mb-4">
-              Don't have an account?
+              Dont have an account?
             </p>
             <Link href="/create-account" passHref>
               <p className="px-5 py-2.5 font-medium bg-blue-50 hover:bg-blue-100 hover:text-green-600 text-green-500 rounded-lg text-sm inline-block w-[150px] text-center">
