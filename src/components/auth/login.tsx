@@ -2,11 +2,13 @@
 import { Button } from "@mui/material";
 import React, { useState } from "react";
 import Link from "next/link";
-import { useAppDispatch,useAppSelector } from "@/lib/store/hooks";
+import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 import { useRouter } from "next/navigation";
 import { loginUser } from "@/lib/store/features/userSlice";
-const Login: React.FC = () => { 
-   const dispatch = useAppDispatch();
+
+
+const Login: React.FC = () => {
+  const dispatch = useAppDispatch();
   const { isLoading, error } = useAppSelector((state) => state.auth);
   const router = useRouter();
 
@@ -14,12 +16,12 @@ const Login: React.FC = () => {
   const [password, setPassword] = useState<string>("");
 
   const handleSubmit = async (e: React.FormEvent) => {
-    
+
     e.preventDefault();
     const result = await dispatch(loginUser({ email, password }));
 
     if (loginUser.fulfilled.match(result)) {
-      router.push("/home"); 
+      router.push("/home");
     }
   };
 
@@ -69,15 +71,15 @@ const Login: React.FC = () => {
             </div>
 
             <Button
-            type="submit"
+              type="submit"
               variant="contained"
               className="w-3/4 !bg-custom-green-200"
               sx={{
                 backgroundColor: "transparent",
               }}
             >
-    {isLoading ? "Loading..." : "Sign In"}        
-     </Button>
+              {isLoading ? "Loading..." : "Sign In"}
+            </Button>
           </form>
           {error && <p className="text-red-500 text-sm mt-4">{error}</p>}
 
