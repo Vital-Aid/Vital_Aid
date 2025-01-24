@@ -4,41 +4,43 @@ import React, { useState } from "react";
 import { signIn } from "next-auth/react";
 import { FcGoogle } from "react-icons/fc";
 import { useSession } from "next-auth/react";
-import {useFormik} from 'formik'
+import { useFormik } from 'formik'
 import { userSchema } from "@/schema/userSchema";
 interface FormValues {
-    name: string;
-    email: string;
-    phone: string;
-    password: string;
-    confirmPassword: string;
-  }
-  
-const initialValues:FormValues={
-    name:'',
-    email:'',
-    phone:'',
-    password:'',
-    confirmPassword:''
+  name: string;
+  email: string;
+  phone: string;
+  password: string;
+  conformPassword: string;
+}
+
+const initialValues: FormValues = {
+  name: '',
+  email: '',
+  phone: '',
+  password: '',
+  conformPassword: ''
 }
 const Register = () => {
   const { data } = useSession();
-  const [loading,setloading]=useState(false)
+  const [loading, setloading] = useState(false)
+  
   if (data) {
     console.log(data);
   }
-  const {errors,handleChange,handleSubmit,values}=useFormik({
+  const { errors, handleChange, handleSubmit, values,touched,resetForm,handleBlur } = useFormik({
     initialValues,
-    validationSchema:userSchema,
-    onSubmit:async()=>{
-        setloading(true)
-        try {
-            await console.log('user:',values);
-            
-        } catch (error) {
-            console.log(error);
-            
-        }
+    validationSchema: userSchema,
+    onSubmit: async () => {
+      setloading(true)
+      try {
+        await console.log('user:', values);
+resetForm()
+      } catch (error) {
+       
+        console.log(error);
+
+      }
     }
 
   })
@@ -64,83 +66,111 @@ const Register = () => {
         {/* Right Panel */}
         <div className="bg-gray-300  w-full sm:w-1/2 p-4 sm:p-5 sm:flex sm:flex-col sm:justify-between">
           <div className="w-full text-black">
-            <form className="space-y-3 sm:space-y-2">
+            <form className="space-y-3 sm:space-y-2" onSubmit={handleSubmit}>
               <div>
                 <label>Full Name</label>
                 <br />
                 <input
-                id="name"
-                value={values.name}
-                onChange={handleChange}
+                  id="name"
+                  value={values.name}
+                  onBlur={handleBlur}
+                  onChange={handleChange}
                   type="text"
                   className="border border-gray-500 w-full h-10 pl-2"
                 />
                 <br />
-                {errors?.name && (
-          <p className="text-red-500 text-sm mt-1">{errors.name}</p>
-        )}
+                {errors?.name && touched.name&& (
+                  <p className="text-red-500 text-sm mt-1">{errors.name}</p>
+                )}
               </div>
               <div>
                 <label>Email</label>
                 <br />
                 <input
-                id="email"
-                value={values.email}
-                onChange={handleChange}
+                  id="email"
+                  value={values.email}
+                  onBlur={handleBlur}
+                  onChange={handleChange}
                   type="text"
                   className="border border-gray-500 w-full h-10 pl-2"
                 />
                 <br />
-                {errors?.email && (
-          <p className="text-red-500 text-sm mt-1">{errors.email}</p>
-        )}
+                {errors?.email && touched.email&& (
+                  <p className="text-red-500 text-sm mt-1">{errors.email}</p>
+                )}
               </div>
               <div>
                 <label>Mobile Number</label>
                 <br />
                 <input
+                  id="phone"
+                  value={values.phone}
+                  onBlur={handleBlur}
+                  onChange={handleChange}
                   type="text"
                   className="border border-gray-500 w-full h-10 pl-2"
                 />
                 <br />
+                {errors?.phone &&touched.phone&& (
+                  <p className="text-red-500 text-sm mt-1">{errors.phone}</p>
+                )}
               </div>
               <div className="w-full sm:flex sm:space-x-4">
                 <div className="sm:w-1/2">
                   <label className="sm:text-sm">Password</label>
                   <br />
                   <input
+                    id="password"
+                    value={values.password}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
                     type="password"
                     className="border border-gray-500 w-full h-10 pl-2"
                   />
+                    {errors?.password && touched.password&& (
+                  <p className="text-red-500 text-sm mt-1">{errors.password}</p>
+                )}
                 </div>
                 <div className="sm:w-1/2 mt-4 sm:mt-0">
                   <label className="sm:text-sm">Confirm Password</label>
                   <br />
                   <input
+                    id="conformPassword"
+                    value={values.conformPassword}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
                     type="password"
                     className="border border-gray-500 w-full h-10 pl-2"
                   />
+                    {errors?.conformPassword && touched.conformPassword&& (
+                  <p className="text-red-500 text-sm mt-1">{errors.conformPassword}</p>
+                )}
                 </div>
+              </div>
+              <div className="w-full pt-8 space-y-3 sm:space-y-4">
+                <button
+                  className={`w-full bg-lime-600 h-10 font-bold text-white text-lg rounded-lg ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  type="submit"
+                  disabled={loading}
+                >
+                  {loading ? 'Submitting...' : 'Create an account'}
+                </button>
+                <button
+                  type="button"
+                  className="w-full bg-white border border-gray-300 text-black py-2 rounded-full hover:bg-gray-100 text-sm"
+                  onClick={() => {
+                    signIn("google");
+                  }}
+                >
+                  <FcGoogle size={25} className="inline-block mr-2" />
+                  Continue with Google
+                </button>
               </div>
             </form>
           </div>
 
-          {/* Buttons */}
-          <div className="w-full mt-5 space-y-3 sm:space-y-4">
-            <button className="w-full bg-lime-600 h-10 font-bold text-white text-lg rounded-lg">
-              Create an account
-            </button>
-            <button
-              type="button"
-              className="w-full bg-white border border-gray-300 text-black py-2 rounded-full hover:bg-gray-100 text-sm"
-              onClick={() => {
-                signIn("google");
-              }}
-            >
-              <FcGoogle size={25} className="inline-block mr-2" />
-              Continue with Google
-            </button>
-          </div>
+          
+
         </div>
       </div>
     </div>
