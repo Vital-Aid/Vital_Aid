@@ -11,28 +11,28 @@ import { loginUser } from "@/lib/store/features/userSlice";
 
 
 const Login: React.FC = () => {
+
   const dispatch = useAppDispatch();
-  const { isLoading, error,user } = useAppSelector((state) => state.auth);
+  const { isLoading, error, user } = useAppSelector((state) => state.auth);
   const router = useRouter();
   console.log(user);
-  
+
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
   const handleSubmit = async (e: React.FormEvent) => {
 
-
     e.preventDefault();
     const result = await dispatch(loginUser({ email, password }));
 
     if (loginUser.fulfilled.match(result)) {
-      if(user &&user.role=='User'){
-        router.push("/home");
+      if (user && user.role == 'User') {
+        router.push("/user");
       }
-      if(user &&user.role=='Doctor'){
+      if (user && user.role == 'Doctor') {
         router.push("/docter");
       }
-      if(user &&user.role=='Admin'){
+      if (user && user.role == 'Admin') {
         router.push("/admin");
       }
     }
