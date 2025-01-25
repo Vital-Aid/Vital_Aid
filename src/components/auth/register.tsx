@@ -6,6 +6,9 @@ import { FcGoogle } from "react-icons/fc";
 import { useSession } from "next-auth/react";
 import { useFormik } from 'formik'
 import { userSchema } from "@/schema/userSchema";
+import { userRegistration } from "@/lib/store/features/userSlice";
+import { useAppDispatch } from "@/lib/store/hooks";
+import { useRouter } from "next/navigation";
 interface FormValues {
   name: string;
   email: string;
@@ -22,22 +25,28 @@ const initialValues: FormValues = {
   conformPassword: ''
 }
 const Register = () => {
+  const dispatch = useAppDispatch()
   const { data } = useSession();
   const [loading, setloading] = useState(false)
-  
+const router=useRouter()
   if (data) {
     console.log(data);
   }
-  const { errors, handleChange, handleSubmit, values,touched,resetForm,handleBlur } = useFormik({
+  const { errors, handleChange, handleSubmit, values, touched, resetForm, handleBlur } = useFormik({
     initialValues,
     validationSchema: userSchema,
     onSubmit: async () => {
       setloading(true)
       try {
+        const result = await dispatch(userRegistration(values));
+        if (result.meta.requestStatus === 'fulfilled') {
+          router.push('/login');
+        }
+        
         await console.log('user:', values);
-resetForm()
+        resetForm()
       } catch (error) {
-       
+
         console.log(error);
 
       }
@@ -79,7 +88,7 @@ resetForm()
                   className="border border-gray-500 w-full h-10 pl-2"
                 />
                 <br />
-                {errors?.name && touched.name&& (
+                {errors?.name && touched.name && (
                   <p className="text-red-500 text-sm mt-1">{errors.name}</p>
                 )}
               </div>
@@ -95,7 +104,7 @@ resetForm()
                   className="border border-gray-500 w-full h-10 pl-2"
                 />
                 <br />
-                {errors?.email && touched.email&& (
+                {errors?.email && touched.email && (
                   <p className="text-red-500 text-sm mt-1">{errors.email}</p>
                 )}
               </div>
@@ -111,7 +120,7 @@ resetForm()
                   className="border border-gray-500 w-full h-10 pl-2"
                 />
                 <br />
-                {errors?.phone &&touched.phone&& (
+                {errors?.phone && touched.phone && (
                   <p className="text-red-500 text-sm mt-1">{errors.phone}</p>
                 )}
               </div>
@@ -127,9 +136,9 @@ resetForm()
                     type="password"
                     className="border border-gray-500 w-full h-10 pl-2"
                   />
-                    {errors?.password && touched.password&& (
-                  <p className="text-red-500 text-sm mt-1">{errors.password}</p>
-                )}
+                  {errors?.password && touched.password && (
+                    <p className="text-red-500 text-sm mt-1">{errors.password}</p>
+                  )}
                 </div>
                 <div className="sm:w-1/2 mt-4 sm:mt-0">
                   <label className="sm:text-sm">Confirm Password</label>
@@ -142,9 +151,9 @@ resetForm()
                     type="password"
                     className="border border-gray-500 w-full h-10 pl-2"
                   />
-                    {errors?.conformPassword && touched.conformPassword&& (
-                  <p className="text-red-500 text-sm mt-1">{errors.conformPassword}</p>
-                )}
+                  {errors?.conformPassword && touched.conformPassword && (
+                    <p className="text-red-500 text-sm mt-1">{errors.conformPassword}</p>
+                  )}
                 </div>
               </div>
               <div className="w-full pt-8 space-y-3 sm:space-y-4">
@@ -169,7 +178,7 @@ resetForm()
             </form>
           </div>
 
-          
+
 
         </div>
       </div>

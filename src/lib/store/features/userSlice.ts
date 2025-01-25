@@ -9,6 +9,7 @@ interface UserState {
     email: string | null;
     id: string | null;
     token: string | null;
+    role:string |null
   } | null;
   isLoading: boolean;
   error: string | null|undefined;
@@ -21,7 +22,7 @@ interface userRegistrationdata{
   password:string |null
 }
 
-type LoginFulfilledType = { email: string; id: string; token: string };
+type LoginFulfilledType = { email: string; id: string; token: string,role:string };
 type LoginArgumentType = { email: string; password: string };
 type LoginRejectValueType = string;
 
@@ -31,11 +32,11 @@ const initialState: UserState = {
   error: null,
 };
 
-export const userRegistration = createAsyncThunk<void, UserRegistrationData, { rejectValue: string }>(
+export const userRegistration = createAsyncThunk<void, userRegistrationdata, { rejectValue: string }>(
   'user/userRegistration',
   async (registrationData, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.post("/api/auth/register", userRegistration);
+      const response = await axiosInstance.post("/api/auth/register", registrationData);
       console.log('Registration successful:', response.data);
     } catch (error) {
       const errorMessage = axiosErrorManager(error);
@@ -48,6 +49,8 @@ export const loginUser = createAsyncThunk<LoginFulfilledType,LoginArgumentType,{
   try {
     console.log('hi2');
     const response = await axiosInstance.post("/api/auth/login", credentials);
+    console.log(response);
+    
     const { data } = response;
 
     // Cookies.set(
@@ -63,7 +66,8 @@ export const loginUser = createAsyncThunk<LoginFulfilledType,LoginArgumentType,{
     return {
       email: data.user.email,
       id: data.user.id,
-      token: data.token,
+      token: data.accessToken,
+      role:data.user.role
     };
   } catch (error) {
     return rejectWithValue(
