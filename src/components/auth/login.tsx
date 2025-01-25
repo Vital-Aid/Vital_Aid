@@ -13,6 +13,8 @@ import { loginUser } from "@/lib/store/features/userSlice";
 const Login: React.FC = () => {
   const dispatch = useAppDispatch();
   const { isLoading, error,user } = useAppSelector((state) => state.auth);
+ 
+  
   const router = useRouter();
   console.log(user);
   
