@@ -32,7 +32,7 @@ const Login: React.FC = () => {
       if(user &&user.role=='Doctor'){
         router.push("/docter");
       }
-      if(user &&user.role=='Doctor'){
+      if(user &&user.role=='Admin'){
         router.push("/admin");
       }
     }
