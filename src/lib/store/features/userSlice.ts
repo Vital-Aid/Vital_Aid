@@ -76,7 +76,7 @@ const userSlice = createSlice({
         state.user = action.payload;
         state.error = null;
       })
-      .addCase(loginUser.rejected, (state, action: PayloadAction<any>) => {
+      .addCase(loginUser.rejected, (state, action: PayloadAction<>) => {
         state.isLoading = false;
         state.error = action.payload;
       });
