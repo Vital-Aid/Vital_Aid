@@ -9,8 +9,10 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     return (
         <>
         <Navbar/>
+        <div className="flex">
         <Sidebar/>
             <main>{children}</main>
+        </div>
         </>
     )
 }
