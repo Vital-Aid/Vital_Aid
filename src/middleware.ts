@@ -23,12 +23,14 @@ export function middleware(req: NextRequest) {
     return NextResponse.redirect(url);
   }
 
+
   if (userType === "Admin") {
     if (isUserProtectedRoute(pathName) || isDoctorProtectedRoute(pathName)) {
       url.pathname = "/login"; 
       return NextResponse.redirect(url);
     }
   }
+
 
   if (!token && isUserProtectedRoute(pathName)) {
     url.pathname = "/login";
@@ -39,12 +41,14 @@ export function middleware(req: NextRequest) {
     url.pathname = "/user";
     return NextResponse.redirect(url);
   }
+
   if (userType === "User") {
     if (isAdminRoute(pathName) || isDoctorProtectedRoute(pathName)) {
       url.pathname = "/login"; 
       return NextResponse.redirect(url);
     }
   }
+
 
   if (!token && isDoctorProtectedRoute(pathName)) {
     url.pathname = "/login";
@@ -56,12 +60,14 @@ export function middleware(req: NextRequest) {
     return NextResponse.redirect(url);
   }
 
+
   if (userType === "Doctor") {
     if (isAdminRoute(pathName) || isUserProtectedRoute(pathName)) {
       url.pathname = "/login"; 
       return NextResponse.redirect(url);
     }
   }
+
 
   return NextResponse.next(); 
 }
