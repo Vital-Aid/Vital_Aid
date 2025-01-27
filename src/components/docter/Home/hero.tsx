@@ -6,9 +6,11 @@ import { useAppSelector } from '@/lib/store/hooks';
 
 
 function Hero() {
+
   // const user=useAppSelector((state)=>state.auth)
   // console.log('gdchsg',user.user?.profileImage?.thumbnail);
   const username=localStorage.getItem('username')
+
   
   return (
     <div className="bg-white h-screen w-screen flex items-center justify-center shadow-md">
