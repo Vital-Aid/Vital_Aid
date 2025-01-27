@@ -104,6 +104,7 @@ const userSlice = createSlice({
       .addCase(loginUser.fulfilled, (state, action: PayloadAction<LoginFulfilledType>) => {
         state.isLoading = false;
         state.user = action.payload;
+        localStorage.setItem('user',action.payload.role)
         state.error = null;
       })
       .addCase(loginUser.rejected, (state, action: PayloadAction<LoginRejectValueType | undefined>) => {
