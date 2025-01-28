@@ -105,6 +105,34 @@ export const loginDoctor = createAsyncThunk<LoginFulfilledType,LoginArgumentType
 }
 );
 
+
+//login admin
+export const loginadmin = createAsyncThunk<LoginFulfilledType,LoginArgumentType,{rejectValue:LoginRejectValueType}>("Admin/login", async (credentials, { rejectWithValue }) => {
+  try {
+    console.log('hi2');
+    const response = await axiosInstance.post("/auth/adminlogin", credentials,{withCredentials:true});
+    console.log(response);
+    
+    const { data } = response;
+console.log('role',data.user);
+
+    return {
+      name:data.user.name,
+      email: data.user.email,
+      id: data.user.id,
+      token: data.accessToken,
+      role:data.user.role,
+      profileImage: data.user.profileImage, 
+      phone: data.user.phone,
+    };
+  } catch (error) {
+    return rejectWithValue(
+      axiosErrorManager(error)
+    )
+  }
+}
+);
+
 const userSlice = createSlice({
   name: "user",
   initialState,
@@ -159,6 +187,24 @@ const userSlice = createSlice({
       state.error = action.payload ;
     }
   )
+
+  //admin login
+  .addCase(loginadmin.pending, (state) => {
+    state.isLoading = true;
+    state.error = null;
+  })
+  .addCase(loginadmin.fulfilled, (state, action: PayloadAction<LoginFulfilledType>) => {
+    state.isLoading = false;
+    state.user = action.payload;
+    localStorage.setItem('user',action.payload.role)
+    localStorage.setItem('username',action.payload.name)
+    state.error = null;
+  })
+  .addCase(loginadmin.rejected, (state, action: PayloadAction<LoginRejectValueType | undefined>) => {
+    state.isLoading = false;
+    state.error = action.payload ;
+  }
+)
  
 
 
