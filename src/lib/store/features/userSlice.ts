@@ -6,6 +6,7 @@ import axiosErrorManager from "@/utils/axiosErrormanager";
 
 interface UserState {
   user: {
+    
     email: string | null;
     id: string | null;
     token: string | null;
@@ -70,6 +71,7 @@ export const loginUser = createAsyncThunk<LoginFulfilledType,LoginArgumentType,{
     // );
 
     return {
+      
       email: data.user.email,
       id: data.user.id,
       token: data.accessToken,
