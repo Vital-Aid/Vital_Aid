@@ -16,6 +16,7 @@ interface UserState {
       thumbnail:string
     }|null
     phone:string|null
+    name:string|null
   } | null;
   isLoading: boolean;
   error: string | null|undefined;
@@ -29,7 +30,7 @@ interface userRegistrationdata{
  
 }
 
-type LoginFulfilledType = { email: string; id: string; token: string,role:string,profileImage:{originalProfile:string,thumbnail:string},phone:string};
+type LoginFulfilledType = { email: string; id: string; token: string,role:string,profileImage:{originalProfile:string,thumbnail:string},phone:string,name:string};
 type LoginArgumentType = { email: string; password: string };
 type LoginRejectValueType = string;
 
@@ -71,7 +72,7 @@ export const loginUser = createAsyncThunk<LoginFulfilledType,LoginArgumentType,{
     // );
 
     return {
-      
+      name:data.user.name,
       email: data.user.email,
       id: data.user.id,
       token: data.accessToken,
@@ -107,6 +108,7 @@ const userSlice = createSlice({
         state.isLoading = false;
         state.user = action.payload;
         localStorage.setItem('user',action.payload.role)
+        localStorage.setItem('username',action.payload.name)
         state.error = null;
       })
       .addCase(loginUser.rejected, (state, action: PayloadAction<LoginRejectValueType | undefined>) => {
