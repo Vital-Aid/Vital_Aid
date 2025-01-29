@@ -1,6 +1,16 @@
 "use client";
+import Link from "next/link";
 import React, { useState } from "react";
-import { FaEnvelope, FaCalendarCheck, FaUserMd, FaUsers, FaRegCalendarAlt, FaHandHoldingHeart, FaBars } from "react-icons/fa";
+import { 
+  FaEnvelope, 
+  FaCalendarCheck, 
+  FaUserMd, 
+  FaUsers, 
+  FaRegCalendarAlt, 
+  FaHandHoldingHeart, 
+  FaBars, 
+  FaUserTie 
+} from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
 
 function Sidebar() {
@@ -24,45 +34,60 @@ function Sidebar() {
       >
         {/* Navigation Items */}
         <nav className="flex-1 px-4 py-6">
-          <ul className="grid grid-cols-1 gap-4">
-            {/* User Doctor Section */}
-            <li className="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-4 flex items-center space-x-3 hover:bg-gray-100 dark:hover:bg-gray-700 transition">
-              <FaUserMd size={24} className="text-sky-500" />
-              <span className="text-lg font-semibold text-gray-700 dark:text-gray-300">User Doctor</span>
+          <ul className="grid grid-cols-1 gap-6">
+            {/* Doctor Section */}
+            <li>
+              <ul className="space-y-4">
+                {/* Doctor Menu */}
+                <li className="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-4 flex items-center space-x-3 hover:bg-gray-100 dark:hover:bg-gray-700 transition">
+                  <FaUserMd size={24} className="text-sky-500" />
+                  <span className="text-lg font-semibold text-gray-700 dark:text-gray-300">Doctor Dashboard</span>
+                </li>
+              </ul>
             </li>
 
-            {/* Appointments Section */}
-            <li className="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-4 flex items-center space-x-3 hover:bg-gray-100 dark:hover:bg-gray-700 transition">
-              <FaCalendarCheck size={24} className="text-sky-500" />
-              <span className="text-lg font-semibold text-gray-700 dark:text-gray-300">Appointments</span>
-            </li>
+            {/* User Section */}
+            <li>
+              <ul className="space-y-4">
+                {/* User Menu */}
+                <Link href="/admin/userList">
+      <li className="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-4 flex items-center space-x-3 hover:bg-gray-100 dark:hover:bg-gray-700 transition cursor-pointer">
+        <FaUserTie size={24} className="text-sky-500" />
+        <span className="text-lg font-semibold text-gray-700 dark:text-gray-300">
+          User Dashboard
+        </span>
+      </li>
+    </Link>
 
-            {/* Events Section */}
-            <li className="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-4 flex items-center space-x-3 hover:bg-gray-100 dark:hover:bg-gray-700 transition">
-              <FaRegCalendarAlt size={24} className="text-sky-500" />
-              <span className="text-lg font-semibold text-gray-700 dark:text-gray-300">Events</span>
-            </li>
+                {/* Appointments Section */}
+                <li className="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-4 flex items-center space-x-3 hover:bg-gray-100 dark:hover:bg-gray-700 transition">
+                  <FaCalendarCheck size={24} className="text-sky-500" />
+                  <span className="text-lg font-semibold text-gray-700 dark:text-gray-300">Appointments</span>
+                </li>
 
-            {/* Blood Donors Section */}
-            <li className="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-4 flex items-center space-x-3 hover:bg-gray-100 dark:hover:bg-gray-700 transition">
-              <FaHandHoldingHeart size={24} className="text-sky-500" />
-              <span className="text-lg font-semibold text-gray-700 dark:text-gray-300">Blood Donors</span>
-            </li>
+                {/* Events Section */}
+                <li className="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-4 flex items-center space-x-3 hover:bg-gray-100 dark:hover:bg-gray-700 transition">
+                  <FaRegCalendarAlt size={24} className="text-sky-500" />
+                  <span className="text-lg font-semibold text-gray-700 dark:text-gray-300">Events</span>
+                </li>
 
-            {/* Volunteers Section */}
-            <li className="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-4 flex items-center space-x-3 hover:bg-gray-100 dark:hover:bg-gray-700 transition">
-              <FaUsers size={24} className="text-sky-500" />
-              <span className="text-lg font-semibold text-gray-700 dark:text-gray-300">Volunteers</span>
+                {/* Blood Donors Section */}
+                <li className="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-4 flex items-center space-x-3 hover:bg-gray-100 dark:hover:bg-gray-700 transition">
+                  <FaHandHoldingHeart size={24} className="text-sky-500" />
+                  <span className="text-lg font-semibold text-gray-700 dark:text-gray-300">Blood Donors</span>
+                </li>
+
+                {/* Volunteers Section */}
+                <li className="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-4 flex items-center space-x-3 hover:bg-gray-100 dark:hover:bg-gray-700 transition">
+                  <FaUsers size={24} className="text-sky-500" />
+                  <span className="text-lg font-semibold text-gray-700 dark:text-gray-300">Volunteers</span>
+                </li>
+              </ul>
             </li>
           </ul>
         </nav>
 
-        {/* Footer */}
-        <div className="p-4 border-t border-gray-200 dark:border-gray-800">
-          <p className="text-sm text-gray-500 dark:text-gray-400 text-center">
-            &copy; 2025 Vital Aid. All rights reserved.
-          </p>
-        </div>
+      
       </div>
 
       {/* Backdrop for Mobile */}
