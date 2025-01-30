@@ -12,13 +12,6 @@ interface Equipment {
     updatedAt: string;           
 }
 
-type EquipmentArgumentType = {
-    name: string;         
-    quantity: number;     
-    image: File;       
-    description: string;  
-};
-
 interface EquipmentState {
     equipment: Equipment | null; 
     isLoading: boolean;           
@@ -33,15 +26,17 @@ const initialState: EquipmentState = {
 
 export const addnewEquipment = createAsyncThunk<
     Equipment, 
-    EquipmentArgumentType,
+    FormData,
     { rejectValue: string } 
 >(
     'addequipment',
-    async (equipmentData, { rejectWithValue }) => {
+    async (formData, { rejectWithValue }) => { 
         try {
-          
-          
-            const response = await axiosInstance.post('/equipment/addequipment', equipmentData);
+            const response = await axiosInstance.post('/equipment/addequipment', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
 
             console.log('Added equipment:', response.data.data);
             return response.data.data; 
@@ -51,8 +46,6 @@ export const addnewEquipment = createAsyncThunk<
         }
     }
 );
-
-
 
 const equipmentSlice = createSlice({
     name: 'equipment',

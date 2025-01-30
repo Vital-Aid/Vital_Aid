@@ -285,7 +285,7 @@ const Sidebar = () => {
                     </ListItemButton>
                   </Link>
                   <Link
-                    href="/Admin-pendinglist"
+                    href="/admin/equipments/addequipments"
                     style={{ textDecoration: "none", color: "inherit" }}
                   >
                     <ListItemButton>
