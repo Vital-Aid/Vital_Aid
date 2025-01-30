@@ -277,7 +277,7 @@ const Sidebar = () => {
               <AccordionDetails>
                 <List>
                   <Link
-                    href="/admin/equipments/listequipments"
+                    href="/admin/equipments/list"
                     style={{ textDecoration: "none", color: "inherit" }}
                   >
                     <ListItemButton>
@@ -285,7 +285,7 @@ const Sidebar = () => {
                     </ListItemButton>
                   </Link>
                   <Link
-                    href="/admin/equipments/addequipments"
+                    href="/admin/equipments/add"
                     style={{ textDecoration: "none", color: "inherit" }}
                   >
                     <ListItemButton>

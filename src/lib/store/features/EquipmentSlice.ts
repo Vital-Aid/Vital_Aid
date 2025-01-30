@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axiosInstance from "@/utils/axios";
 import axiosErrorManager from "@/utils/axiosErrormanager";
 
-interface Equipment {
+export interface Equipment {
     _id: string;              
     name: string;                
     image: string;         
@@ -41,14 +41,15 @@ export const addnewEquipment = createAsyncThunk<
                 },
             });
 
-            console.log('Added equipment:', response.data.data);
             return response.data.data; 
         } catch (error) {
-            console.error('Error adding equipment:', error);
+           
             return rejectWithValue(axiosErrorManager(error));
         }
     }
 );
+
+
 
 export const getallEquipment=createAsyncThunk<Equipment[],void,{ rejectValue: string }>('getequipments',async(_, {rejectWithValue })=>{
  try {
