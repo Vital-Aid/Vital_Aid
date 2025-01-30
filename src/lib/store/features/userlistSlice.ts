@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axiosInstance from "@/utils/axios";
 import Cookies from "js-cookie";
 import axiosErrorManager from "@/utils/axiosErrormanager";
+import { string } from "yup";
 
 interface User {
   _id: string;
@@ -17,6 +18,7 @@ interface User {
   isDeleted: boolean;
   createdAt: string;
   updatedAt?: string;
+  blocked:boolean;
 }
 
 interface UsersState {
@@ -31,20 +33,19 @@ const initialState: UsersState = {
   error: null,
 };
 
-// Async thunk to fetch users
 export const fetchUsers = createAsyncThunk<User[], void, { rejectValue: string }>(
   "users/fetchUsers",
   async (_, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.get("/users/getUsers");
-      console.log('responelist',response);
       
-      return response.data.users; // Assuming backend returns { users: [...] }
+      return response.data.users; 
     } catch (error) {
       return rejectWithValue(axiosErrorManager(error));
     }
   }
 );
+
 
 const userSlice = createSlice({
   name: "users",
@@ -63,8 +64,11 @@ const userSlice = createSlice({
       .addCase(fetchUsers.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload || "Failed to fetch users.";
-      });
+      })
+
+    
   },
+
 });
 
 
