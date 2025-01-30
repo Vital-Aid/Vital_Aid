@@ -1,5 +1,6 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axiosInstance from "@/utils/axios";
+import axiosErrorManager from "@/utils/axiosErrormanager";
 
 interface Equipment {
     _id: string;              
@@ -13,13 +14,15 @@ interface Equipment {
 }
 
 interface EquipmentState {
-    equipment: Equipment | null; 
+    equipment: Equipment | null;
+    allEquipment:Equipment[]|null 
     isLoading: boolean;           
     error: string | null;   
 }    
 
 const initialState: EquipmentState = {
     equipment: null, 
+    allEquipment:null,
     isLoading: false, 
     error: null,      
 };
@@ -42,17 +45,42 @@ export const addnewEquipment = createAsyncThunk<
             return response.data.data; 
         } catch (error) {
             console.error('Error adding equipment:', error);
-            return rejectWithValue("Failed to add equipment");
+            return rejectWithValue(axiosErrorManager(error));
         }
     }
 );
 
+export const getallEquipment=createAsyncThunk<Equipment[],void,{ rejectValue: string }>('getequipments',async(_, {rejectWithValue })=>{
+ try {
+    const response=await axiosInstance.get('/equipment/getequipments')
+ return response.data.data
+ } catch (error) {
+    return rejectWithValue(axiosErrorManager(error));
+ }
+})
 const equipmentSlice = createSlice({
     name: 'equipment',
     initialState,
     reducers: {},
     extraReducers: (builder) => {
         builder
+        .addCase(getallEquipment.pending,(state)=>{
+            state.error=null
+            state.isLoading=true
+        })
+
+        .addCase(getallEquipment.fulfilled,(state,action:PayloadAction<Equipment[]>)=>{
+            state.error=null
+            state.allEquipment=action.payload
+            state.isLoading=false
+        })
+
+        .addCase(getallEquipment.rejected,(state,action)=>{
+            state.error=action.payload || "An unknown error occurred"
+            state.isLoading=false
+        })
+
+        //add new equipments
             .addCase(addnewEquipment.pending, (state) => {
                 state.isLoading = true;
                 state.error = null;

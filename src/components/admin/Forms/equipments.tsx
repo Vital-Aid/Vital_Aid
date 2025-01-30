@@ -151,7 +151,7 @@ console.log('fe:',setFieldValue);
                             type="submit"
                             className="px-6 py-2 border-2 border-green-600 text-green-600 rounded-md hover:bg-green-600 hover:text-white"
                         >
-                            Add
+                            {isLoading?'Loading...':'Add'}
                         </button>
                         <button
                             type="button"

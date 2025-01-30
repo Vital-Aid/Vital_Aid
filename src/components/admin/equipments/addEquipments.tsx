@@ -1,5 +1,5 @@
 import React from 'react'
-import Equipments from './Forms/equipments'
+import Equipments from '../Forms/equipments'
 
 const AddEquipments = () => {
   return (

@@ -1,13 +1,14 @@
 import { configureStore } from "@reduxjs/toolkit";
-import authReducer from "./features/userSlice";  // Existing auth reducer
-import userReducer from "./features/userlistSlice"; // Import your new users slice
-
+import authReducer from "./features/userSlice"; 
+import userReducer from "./features/userlistSlice"; 
 import EquipmentSlice from "./features/EquipmentSlice";
+
+
 export const makeStore = () => {
   return configureStore({
     reducer: {
-      auth: authReducer,  // Authentication slice
-      users: userReducer, // Users list slice,
+      auth: authReducer,  
+      users: userReducer,
      equipments:EquipmentSlice
     },
   });

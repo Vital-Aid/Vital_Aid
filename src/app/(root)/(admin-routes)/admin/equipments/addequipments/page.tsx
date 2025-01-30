@@ -1,4 +1,4 @@
-import AddEquipments from '@/components/admin/addEquipments'
+import AddEquipments from '@/components/admin/equipments/addEquipments'
 import React from 'react'
 
 const Page = () => {
