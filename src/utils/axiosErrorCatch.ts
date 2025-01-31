@@ -1,4 +1,4 @@
-import axios from "axios";
+{/*import axios from "axios";
 
 export const axiosErrorCatch = (error: unknown): string => {
   if (axios.isAxiosError(error)) {
@@ -18,3 +18,5 @@ export const axiosErrorCatch = (error: unknown): string => {
     return "An unknown error occurred. Please try again.";
   }
 };
+
+ Assuming Listings is an object, render specific properties */}

@@ -59,7 +59,7 @@ function AllDoctors() {
                 <TableCell>
                   {columnKey === "name" ? (
                     <Link
-                      href={`/doctors/${item.key}`}
+                      href={`/admin/doctors/${item.key}`}
                       className="text-blue-600 hover:underline"
                     >
                       {getKeyValue(item, columnKey)}
