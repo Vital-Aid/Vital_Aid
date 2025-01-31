@@ -3,6 +3,7 @@ import React, { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 import { fetchEvents } from "@/lib/store/features/eventSlice";
 import { useRouter } from "next/navigation"; 
+import Image from "next/image";
 
 function AllEvents() {
   const { events, loading, error } = useAppSelector((state) => state.events);
@@ -42,7 +43,7 @@ function AllEvents() {
               <tr key={event._id} className="hover:bg-gray-50 transition-colors">
                 <td className="border p-3">
                   {event.image ? (
-                    <img
+                    <Image
                       src={Array.isArray(event.image) ? event.image[0] : event.image}
                       alt={event.title}
                       className="w-16 h-16 object-cover rounded-lg"
