@@ -43,11 +43,13 @@ function AllEvents() {
               <tr key={event._id} className="hover:bg-gray-50 transition-colors">
                 <td className="border p-3">
                   {event.image ? (
-                    <Image
-                      src={Array.isArray(event.image) ? event.image[0] : event.image}
-                      alt={event.title}
-                      className="w-16 h-16 object-cover rounded-lg"
-                    />
+                   <Image
+                   src={Array.isArray(event.image) ? event.image[0] : event.image}
+                   alt={event.title}
+                   width={64}  
+                   height={64}
+                   className="object-cover rounded-lg"
+                 />
                   ) : (
                     <span className="text-gray-400">No Image</span>
                   )}
