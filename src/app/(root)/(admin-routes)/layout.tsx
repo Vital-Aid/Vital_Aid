@@ -12,11 +12,12 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       <Navbar />
 
       <div className="flex flex-1">
+
         <Sidebar />
 
         <main className="flex-1 p-4 overflow-auto  md:ml-60 mt-16  ">{children}</main>
       </div>
-    </div>
+    </div> 
   );
 };
 
