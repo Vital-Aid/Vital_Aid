@@ -104,7 +104,7 @@ const Equipments = () => {
                     Add Equipment
                 </h2>
 
-                <form className="space-y-2" onSubmit={handleSubmit}>
+                <form className="space-y-2 " onSubmit={handleSubmit}>
                     
                     <div>
                         <label className="block font-medium text-gray-700">Name</label>

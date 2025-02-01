@@ -35,16 +35,16 @@ const ListEquipments = () => {
                        <RiEdit2Fill className='text-blue-800 text-xl'/>
                        </Link>
                     </div>
-                    <div className='flex justify-center  items-center h-28 w-1/4 bg-geay-200 p-2 '>
+                    <div className='flex justify-center  items-center  w-1/4 bg-geay-200 p-2 '>
                         <Image
                             src={equipment.image}
                             alt={equipment.name}
-                            width={100} 
-                            height={100} 
+                            width={150} 
+                            height={150} 
                             objectFit="cover" 
                         />
                     </div>
-                    <div className='h-28 w-3/4 bg-gray-200 text-gray-600 p-4 overflow-y-scroll scrollbar-none rounded-lg'>
+                    <div className='h-fit w-3/4 bg-gray-200 text-gray-600 p-4 overflow-y-scroll scrollbar-none rounded-lg'>
                         <p className='font-extrabold text-2xl font-serif '>{equipment.name}</p>
                         <p><span className='font-bold'>Available :</span> {equipment.quantity}</p>
                         <p className='break-words'><span className='font-bold'>Description :</span> {equipment.description}</p>
