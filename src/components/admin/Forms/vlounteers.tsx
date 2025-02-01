@@ -1,11 +1,16 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { volunteerSchema } from '@/schema/volunteersSchema'
 import { useFormik } from 'formik'
 import Image from "next/image";
 import { FaFileUpload } from "react-icons/fa";
-import { useAppDispatch } from '@/lib/store/hooks';
-import { addVolunteer } from '@/lib/store/features/volunteers';
+import { useAppDispatch, useAppSelector } from '@/lib/store/hooks';
+import { Volunteer, addVolunteer } from '@/lib/store/features/volunteers';
+import { useParams } from 'next/navigation';
+
+import axiosInstance from '@/utils/axios';
+import axiosErrorManager from '@/utils/axiosErrormanager';
+import {  useRouter } from 'next/navigation';
 
 
 interface formValue {
@@ -23,9 +28,30 @@ const initialState: formValue = {
 }
 
 const Vlounteers = () => {
+    const route=useRouter()
     const dispatch=useAppDispatch()
+    const {volunteerid}=useParams()
+    const{allVolunteers}=useAppSelector((state)=>state.volunteers)
+    const [volunteer,setVolunteer]=useState<Volunteer|null>(null)
     const [imagePreview, setImagePreview] = useState<string | null>(null);
-    const { values, errors, handleChange, handleBlur, handleReset, handleSubmit, touched, setFieldValue } = useFormik({
+
+    useEffect(()=>{
+        if(volunteerid){
+            const selectvolunteer=allVolunteers?.find((vol) => vol._id === volunteerid) ?? null;
+            setVolunteer(selectvolunteer)
+            if(selectvolunteer){
+                setImagePreview(selectvolunteer.image)
+                setFieldValue("image",selectvolunteer.image)
+            
+               
+            }
+           
+        }
+    },[allVolunteers,volunteerid])
+
+    
+
+    const { values, errors, handleChange, handleBlur, handleSubmit, touched, setFieldValue } = useFormik({
         initialValues: initialState,
         validationSchema: volunteerSchema,
         onSubmit: async () => {
@@ -38,8 +64,24 @@ const Vlounteers = () => {
                     formData.append('image', values.image);
                 }
                 setImagePreview(null);
-              const response=  await dispatch(addVolunteer(formData))
-        console.log('resp',response);
+                if(!volunteerid){
+                    const response=  await dispatch(addVolunteer(formData))
+                    if(response.meta.requestStatus=='fulfilled'){
+                        route.push('/admin/volunteers/list')
+                    }
+                    console.log('resp',response.meta.requestStatus);
+                }else{
+                    try {
+                        const response=await axiosInstance.put(`/volunteers/edit/${volunteerid}`,formData)
+                        if (response.status === 200) {
+                            route.push('/admin/volunteers/list');
+                        }
+                        
+                    } catch (error) {
+                        axiosErrorManager(error)
+                    }
+                }
+             
         
     
               
@@ -49,6 +91,14 @@ const Vlounteers = () => {
         }
     });
     
+    useEffect(()=>{
+        if(volunteer){
+            setFieldValue("name",volunteer.name)
+            setFieldValue("phone",volunteer.phone)
+            setFieldValue("gender",volunteer.gender)
+        }
+
+    },[volunteer,setFieldValue])
     
     return (
         <div className="w-screen h-fit fixed flex justify-center items-center p-6 sm:w-fit">
@@ -109,6 +159,7 @@ const Vlounteers = () => {
                             <label className="block font-medium text-gray-700">Phone</label>
                             <input
                                 id="phone"
+                                value={values.phone}
                                 onChange={handleChange}
                                 onBlur={handleBlur}
                                 type="number"

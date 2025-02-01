@@ -2,7 +2,7 @@ import { createSlice,createAsyncThunk } from "@reduxjs/toolkit";
 import axiosErrorManager from "@/utils/axiosErrormanager";
 import axiosInstance from "@/utils/axios";
 
-interface Volunteer {
+export interface Volunteer {
     _id: string;
     name: string;
     phone: number;
@@ -49,6 +49,11 @@ export const getAllvolunteers=createAsyncThunk<Volunteer[],void,{ rejectValue: s
    })
 
 
+
+
+
+
+
 const initialState:volunteerState={
     volunteer:null,
     allVolunteers:null,
@@ -82,7 +87,7 @@ const volunteerSlice=createSlice({
         })
         .addCase(getAllvolunteers.fulfilled,(state,action)=>{
             state.error=null
-            state.isLoading=true
+            state.isLoading=false
             state.allVolunteers=action.payload
 
         })
