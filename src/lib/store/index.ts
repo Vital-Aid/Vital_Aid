@@ -2,7 +2,8 @@ import { configureStore } from "@reduxjs/toolkit";
 import authReducer from "./features/userSlice"; 
 import userReducer from "./features/userlistSlice"; 
 import EquipmentSlice from "./features/EquipmentSlice";
-import  volunteerSlice  from './features/volunteers'import eventsReducer from "./features/eventSlice"
+import  volunteerSlice  from './features/volunteers'
+import eventsReducer from "./features/eventSlice"
 
 export const makeStore = () => {
   return configureStore({
