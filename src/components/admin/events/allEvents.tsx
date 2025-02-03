@@ -2,7 +2,7 @@
 import React, { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 import { fetchEvents } from "@/lib/store/features/eventSlice";
-import { useRouter } from "next/navigation"; 
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 
 function AllEvents() {
@@ -18,7 +18,7 @@ function AllEvents() {
   if (error) return <p>Error: {error}</p>;
 
   const handleEdit = (id: string) => {
-    router.push(`/admin/editEvents/${id}`); 
+    router.push(`/admin/editEvents/${id}`);
   };
 
   return (
@@ -43,13 +43,13 @@ function AllEvents() {
               <tr key={event._id} className="hover:bg-gray-50 transition-colors">
                 <td className="border p-3">
                   {event.image ? (
-                   <Image
-                   src={Array.isArray(event.image) ? event.image[0] : event.image}
-                   alt={event.title}
-                   width={64}  
-                   height={64}
-                   className="object-cover rounded-lg"
-                 />
+                    <Image
+                      src={Array.isArray(event.image) ? event.image[0] : event.image}
+                      alt={event.title}
+                      width={64}
+                      height={64}
+                      className="object-cover rounded-lg"
+                    />
                   ) : (
                     <span className="text-gray-400">No Image</span>
                   )}

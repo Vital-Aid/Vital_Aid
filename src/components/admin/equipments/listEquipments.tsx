@@ -10,15 +10,16 @@ import axiosInstance from '@/utils/axios';
 import axiosErrorManager from '@/utils/axiosErrormanager';
 
 const ListEquipments = () => {
-    const { allEquipment, isLoading} = useAppSelector((state) => state.equipments)
+    const { allEquipment, isLoading } = useAppSelector((state) => state.equipments)
     const dispatch = useAppDispatch()
     useEffect(() => {
         dispatch(getallEquipment())
     }, [])
-    const deleteEquipments=async(id: string)=>{
+    
+    const deleteEquipments = async (id: string) => {
         try {
             await axiosInstance.put(`/equipment/deleteEquipment/${id}`)
-           await dispatch(getallEquipment())
+            await dispatch(getallEquipment())
         } catch (error) {
             axiosErrorManager(error)
         }
@@ -30,18 +31,18 @@ const ListEquipments = () => {
             {allEquipment && allEquipment.map((equipment) => (
                 <div className='relative flex h-fit p-2 w-full' key={equipment._id}>
                     <div className='flex space-x-2 absolute right-8 mt-1'>
-                       <MdDeleteForever className='text-red-800 text-xl' onClick={()=>deleteEquipments(equipment._id)}/>
-                       <Link href={`/admin/equipments/edit/${equipment._id}`}>
-                       <RiEdit2Fill className='text-blue-800 text-xl'/>
-                       </Link>
+                        <MdDeleteForever className='text-red-800 text-xl' onClick={() => deleteEquipments(equipment._id)} />
+                        <Link href={`/admin/equipments/edit/${equipment._id}`}>
+                            <RiEdit2Fill className='text-blue-800 text-xl' />
+                        </Link>
                     </div>
                     <div className='flex justify-center  items-center  w-1/4 bg-geay-200 p-2 '>
                         <Image
                             src={equipment.image}
                             alt={equipment.name}
-                            width={150} 
-                            height={150} 
-                            objectFit="cover" 
+                            width={150}
+                            height={150}
+                            objectFit="cover"
                         />
                     </div>
                     <div className='h-fit w-3/4 bg-gray-200 text-gray-600 p-4 overflow-y-scroll scrollbar-none rounded-lg'>
