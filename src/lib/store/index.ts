@@ -3,14 +3,15 @@ import authReducer from "./features/userSlice";
 import userReducer from "./features/userlistSlice"; 
 import EquipmentSlice from "./features/EquipmentSlice";
 import eventsReducer from "./features/eventSlice"
-
+import  donorsReducer from "./features/donorsSlice"
 export const makeStore = () => {
   return configureStore({
     reducer: {
       auth: authReducer,  
       users: userReducer,
      equipments:EquipmentSlice,
-     events: eventsReducer
+     events: eventsReducer,
+     donors: donorsReducer
 
     },
   });
