@@ -1,9 +1,10 @@
 "use client";
 import React, { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
-import { fetchEvents, deleteEvent } from "@/lib/store/features/eventSlice"; 
+import { fetchEvents, deleteEvent } from "@/lib/store/features/eventSlice";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { MdDelete, MdEdit } from "react-icons/md";
 
 function AllEvents() {
   const { events, loading, error } = useAppSelector((state) => state.events);
@@ -22,10 +23,12 @@ function AllEvents() {
   };
 
   const handleDelete = async (id: string) => {
-    const confirmDelete = window.confirm("Are you sure you want to delete this event?");
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this event?"
+    );
     if (confirmDelete) {
-      await dispatch(deleteEvent(id)); 
-      dispatch(fetchEvents()); 
+      await dispatch(deleteEvent(id));
+      dispatch(fetchEvents());
     }
   };
 
@@ -38,21 +41,38 @@ function AllEvents() {
         <table className="w-full border-collapse border border-gray-300 dark:border-gray-700 rounded-lg overflow-hidden text-center">
           <thead className="bg-gray-100 dark:bg-gray-700">
             <tr>
-              <th className="border p-3 text-gray-700 dark:text-white">Image</th>
-              <th className="border p-3 text-gray-700 dark:text-white">Title</th>
+              <th className="border p-3 text-gray-700 dark:text-white">
+                Image
+              </th>
+              <th className="border p-3 text-gray-700 dark:text-white">
+                Title
+              </th>
               <th className="border p-3 text-gray-700 dark:text-white">Date</th>
-              <th className="border p-3 text-gray-700 dark:text-white">Location</th>
-              <th className="border p-3 text-gray-700 dark:text-white">Organization</th>
-              <th className="border p-3 text-gray-700 dark:text-white">Actions</th>
+              <th className="border p-3 text-gray-700 dark:text-white">
+                Location
+              </th>
+              <th className="border p-3 text-gray-700 dark:text-white">
+                Organization
+              </th>
+              <th className="border p-3 text-gray-700 dark:text-white">
+                Actions
+              </th>
             </tr>
           </thead>
           <tbody>
             {events.map((event) => (
-              <tr key={event._id} className="hover:bg-gray-50 transition-colors">
+              <tr
+                key={event._id}
+                className="hover:bg-gray-50 transition-colors"
+              >
                 <td className="border p-3">
                   {event.image ? (
                     <Image
-                      src={Array.isArray(event.image) ? event.image[0] : event.image}
+                      src={
+                        Array.isArray(event.image)
+                          ? event.image[0]
+                          : event.image
+                      }
                       alt={event.title}
                       width={64}
                       height={64}
@@ -62,22 +82,31 @@ function AllEvents() {
                     <span className="text-gray-400">No Image</span>
                   )}
                 </td>
-                <td className="border p-3 text-gray-700 dark:text-gray-300">{event.title}</td>
-                <td className="border p-3 text-gray-700 dark:text-gray-300">{event.date}</td>
-                <td className="border p-3 text-gray-700 dark:text-gray-300">{event.location}</td>
-                <td className="border p-3 text-gray-700 dark:text-gray-300">{event.organization}</td>
+                <td className="border p-3 text-gray-700 dark:text-gray-300">
+                  {event.title}
+                </td>
+                <td className="border p-3 text-gray-700 dark:text-gray-300">
+                  {event.date}
+                </td>
+                <td className="border p-3 text-gray-700 dark:text-gray-300">
+                  {event.location}
+                </td>
+                <td className="border p-3 text-gray-700 dark:text-gray-300">
+                  {event.organization}
+                </td>
                 <td className=" p-3 flex justify-center space-x-2">
                   <button
                     onClick={() => handleEdit(event._id)}
-                    className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
+                    className="p-2 bg-blue-600 mt-5 text-white  rounded-md  hover:bg-blue-700 transition shadow-md"
                   >
-                    Edit
+                    <MdEdit size={20} />
                   </button>
+
                   <button
                     onClick={() => handleDelete(event._id)}
-                    className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition"
+                    className="p-2 mt-5 bg-red-600 text-white  rounded-md hover:bg-red-700 transition shadow-md"
                   >
-                    Delete
+                    <MdDelete size={20} />
                   </button>
                 </td>
               </tr>

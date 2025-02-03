@@ -37,7 +37,7 @@ export const fetchDonors = createAsyncThunk<Donor[], void, { rejectValue: string
   async (_, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.get("/donors/getdonors");
-      return response.data.donors; // Return the donors array
+      return response.data.donors; 
     } catch (error) {
       return rejectWithValue(axiosErrorManager(error));
     }
