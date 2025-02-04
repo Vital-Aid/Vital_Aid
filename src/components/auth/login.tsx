@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 import { useRouter } from "next/navigation";
-import { loginUser,loginadmin,loginDoctor } from "@/lib/store/features/userSlice";
+import { loginUser, loginadmin, loginDoctor } from "@/lib/store/features/userSlice";
 import LoginModal from "../ui/loginModal";
 import Image from "next/image";
 import DRpng from "../../../public/Doctor.png"
@@ -21,21 +21,21 @@ const Login: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const result =userType=="User"? await dispatch(loginUser({ email, password })):userType=="Admin"?await dispatch(loginadmin({ email, password })):await dispatch(loginDoctor({ email, password }));
-    console.log("result:",result);
-    
+    const result = userType == "User" ? await dispatch(loginUser({ email, password })) : userType == "Admin" ? await dispatch(loginadmin({ email, password })) : await dispatch(loginDoctor({ email, password }));
+    console.log("result:", result);
+
     const role = localStorage.getItem("user");
-   
-    if(result.meta.requestStatus=='fulfilled'){
+
+    if (result.meta.requestStatus == 'fulfilled') {
       if (role && role === "User") {
-            router.push("/user");
-          }
-          if (role && role === "Doctor") {
-            router.push("/doctor");
-          }
-          if (role && role === "Admin") {
-            router.push("/admin");
-          }
+        router.push("/user");
+      }
+      if (role && role === "Doctor") {
+        router.push("/doctor");
+      }
+      if (role && role === "Admin") {
+        router.push("/admin");
+      }
     }
   };
 
@@ -128,18 +128,18 @@ const Login: React.FC = () => {
             </Button>
           </form>
           {error && <p className="text-red-500 text-sm mt-4">{error}</p>}
-          {userType === "User" &&(
-          <div className="sm:hidden mt-2 flex  items-center justify-center space-y-4">
-            <p className="text-gray-700 mt-3 text-base font-medium">
-              Dont have an account yet?
-            </p>
-            <Link href="/register" passHref>
-              <Button  variant="text" color="success">
-                Create it
-              </Button>
-            </Link>
-            
-          </div>)}
+          {userType === "User" && (
+            <div className="sm:hidden mt-2 flex  items-center justify-center space-y-4">
+              <p className="text-gray-700 mt-3 text-base font-medium">
+                Dont have an account yet?
+              </p>
+              <Link href="/register" passHref>
+                <Button variant="text" color="success">
+                  Create it
+                </Button>
+              </Link>
+
+            </div>)}
         </div>
 
         <div

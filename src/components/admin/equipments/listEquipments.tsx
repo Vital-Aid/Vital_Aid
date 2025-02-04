@@ -8,14 +8,15 @@ import { RiEdit2Fill } from "react-icons/ri";
 import Link from 'next/link';
 import axiosInstance from '@/utils/axios';
 import axiosErrorManager from '@/utils/axiosErrormanager';
+import { Button } from '@mui/material';
 
 const ListEquipments = () => {
     const { allEquipment, isLoading } = useAppSelector((state) => state.equipments)
     const dispatch = useAppDispatch()
     useEffect(() => {
         dispatch(getallEquipment())
-    }, [])
-    
+    }, [dispatch])
+
     const deleteEquipments = async (id: string) => {
         try {
             await axiosInstance.put(`/equipment/deleteEquipment/${id}`)
@@ -25,9 +26,18 @@ const ListEquipments = () => {
         }
     }
     return (
+        <>
+       
+        <div className="flex justify-end items-end pr-1 md:pr-5">
+                <Link href={"/admin/equipments/add"}>
+                    <Button variant="contained">Add an equipment</Button>
+                </Link>
+            </div>
         <div className='w-full h-fit flex flex-col px-2 justify-center items-center overflow-y-scroll scrollbar-none'>
-            <h1 className='text-green-700 text-lg font-bold'>Equipments</h1>
+        <h1 className='text-green-700 text-lg font-bold'>Equipments</h1>
+
             {isLoading && <p className="text-blue-500 font-bold">Loading...</p>}
+            
             {allEquipment && allEquipment.map((equipment) => (
                 <div className='relative flex h-fit p-2 w-full' key={equipment._id}>
                     <div className='flex space-x-2 absolute right-8 mt-1'>
@@ -55,6 +65,10 @@ const ListEquipments = () => {
 
 
         </div>
+        
+        
+        </>
+        
     )
 }
 
