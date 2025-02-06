@@ -8,7 +8,7 @@ const isDoctorProtectedRoute = (route: string) => route.startsWith("/doctor") &&
 export function middleware(req: NextRequest) {
   
   const userType = req.cookies.get("user")?.value;
-  const token = req.cookies.get("refreshmentToken")?.value || req.cookies.get("accessToken")?.value;
+  const token = req.cookies.get("refreshToken")?.value || req.cookies.get("accessToken")?.value;
   const url = req.nextUrl.clone();
   const pathName = url.pathname;
   

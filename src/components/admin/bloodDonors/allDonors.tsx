@@ -14,8 +14,7 @@ function AllDonors() {
   const [currentPage, setCurrentPage] = useState(1);
   const [group,setgroup]=useState<string>("All")
   const[donorsbygroup,setDonorsbygroup]=useState<Donor[]|null>(null)
-  console.log(donors, "donors");
-  console.log('grp:',group);
+  
   
 useEffect(()=>{
   if(group=="All"){
