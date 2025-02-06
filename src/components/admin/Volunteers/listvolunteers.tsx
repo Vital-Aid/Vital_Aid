@@ -1,25 +1,47 @@
 'use client'
-import { getAllvolunteers } from '@/lib/store/features/volunteers'
+import { getAllvolunteers,searchVolunteers } from '@/lib/store/features/volunteers'
 import { useAppDispatch, useAppSelector } from '@/lib/store/hooks'
 import Image from 'next/image'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState ,useCallback} from 'react'
 import { RiEdit2Fill } from "react-icons/ri";
 import { MdDeleteForever } from "react-icons/md";
 import Link from 'next/link'
 import axiosInstance from '@/utils/axios'
 import axiosErrorManager from '@/utils/axiosErrormanager'
-import { Button } from '@mui/material'
+import { Button ,TextField} from '@mui/material'
+import { debounce } from 'lodash'
+
 
 const Listvolunteers = () => {
-
+    const { allVolunteers, isLoading, totalPages,searchedVolunteers } = useAppSelector((state) => state.volunteers)
+    const dispatch = useAppDispatch()
+    console.log('searched:',searchedVolunteers);
+    
     const [currentPage, setCurrentPage] = useState(1);
+    const [searchQuery,setSearchQuery]=useState<string>("")
+    const debouncedSearch = useCallback(
+        debounce((query: string) => {
+            setSearchQuery(query)  
+        }, 500),
+        []
+    )
+console.log("ssssssss:",searchQuery);
+
+    useEffect(() => {
+        if (searchQuery.length>1) {
+            dispatch(searchVolunteers(searchQuery));
+        } else {
+            
+            dispatch(getAllvolunteers(currentPage));
+        }
+    }, [dispatch, currentPage, searchQuery]);
+
 
     const handlePageChange = (newPage: number) => {
         setCurrentPage(newPage);
     };
 
-    const { allVolunteers, isLoading, totalPages } = useAppSelector((state) => state.volunteers)
-    const dispatch = useAppDispatch()
+    
 
     useEffect(() => {
         dispatch(getAllvolunteers(currentPage))
@@ -42,11 +64,26 @@ const Listvolunteers = () => {
                 <h2 className="text-2xl font-bold text-gray-700 dark:text-white mb-4 text-center">
                     volunteers
                 </h2>
-                <div className="flex justify-end items-end pr-1 pb-4">
+                {/* //searchbar */}
+
+               <div className='flex justify-between mb-3'>
+               <div className=" ">
+                    <TextField
+                        label="Search Volunteers"
+                        variant="outlined"
+                        onChange={(e) => debouncedSearch(e.target.value)} 
+                        sx={{width:{xs:'250px',sm:'300px'},boxShadow:"none"}}
+                    />
+                </div>
+
+               
+                {/* ///////// */}
+                <div className=" pr-1 mt-4">
                     <Link href={"/admin/volunteers/add"}>
                         <Button variant="contained" color='success'>Add</Button>
                     </Link>
                 </div>
+               </div>
                 <table className="w-full border-collapse rounded-lg shadow-lg ">
                     <thead className="bg-green-200 rounded-xl">
                         <tr className="text-left text-sm md:text-base">
@@ -60,7 +97,7 @@ const Listvolunteers = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {allVolunteers && allVolunteers.map((volunteer) => (
+                        {(searchedVolunteers ? searchedVolunteers : allVolunteers)?.map((volunteer) => (
                             <tr key={volunteer._id} className="border-b hover:bg-gray-100 text-xs md:text-sm">
                                 <td className="p-2 md:p-3">{volunteer._id}</td>
                                 <td className="p-2 md:p-3 font-semibold">{volunteer.name}</td>

@@ -1,9 +1,9 @@
 
 
 "use client";
-import { getallEquipment } from "@/lib/store/features/EquipmentSlice";
+import { getallEquipment, searchEQuipment } from "@/lib/store/features/EquipmentSlice";
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import { MdDeleteForever } from "react-icons/md";
 import { RiEdit2Fill } from "react-icons/ri";
@@ -22,16 +22,38 @@ import {
     Typography,
     CircularProgress,
     Button,
+    TextField
 } from "@mui/material";
+import { debounce } from "lodash";
+
 
 const ListEquipments = () => {
-    const { allEquipment, isLoading, totalPages } = useAppSelector((state) => state.equipments);
+    const { allEquipment, isLoading, totalPages, searchedEquipments } = useAppSelector((state) => state.equipments);
     const dispatch = useAppDispatch();
     const [currentPage, setCurrentPage] = useState(1);
+    const [query, setQuery] = useState<string>('')
+
+    const debounsedsearch = useCallback(
+        debounce((query: string) => {
+            setQuery(query)
+        }, 500),
+        [dispatch]
+    )
+
+    console.log('dfvequip:', searchedEquipments);
+    console.log('dfvequip:', query);
+
+
+
 
     useEffect(() => {
-        dispatch(getallEquipment(currentPage));
-    }, [dispatch, currentPage]);
+        if (query.length > 1) {
+            dispatch(searchEQuipment(query))
+        } else {
+            dispatch(getallEquipment(currentPage));
+        }
+
+    }, [dispatch, currentPage, query]);
 
     const deleteEquipments = async (id: string) => {
         try {
@@ -48,11 +70,6 @@ const ListEquipments = () => {
     return (
         <>
 
-            <div className="flex justify-end items-end pr-1 md:pr-16">
-                <Link href={"/admin/equipments/add"}>
-                    <Button variant="outlined" color="primary">add an equipment</Button>
-                </Link>
-            </div>
             <div className="w-full flex flex-col items-center overflow-scroll scrollbar-none">
 
                 <Typography variant="h4" color="green" sx={{ mt: 2, mb: 2, fontWeight: "bold" }}>
@@ -60,6 +77,22 @@ const ListEquipments = () => {
                 </Typography>
 
 
+
+                <div className='flex justify-between mb-3 w-[90%] '>
+                    <div>
+                        <TextField
+                            label="Search Equipments"
+                            variant="outlined"
+                            onChange={(e) => debounsedsearch(e.target.value)}
+                            sx={{ width: { xs: '250px', sm: '300px' }, boxShadow: "none" }}
+                        />
+                    </div>
+                    <div className=" pr-1 mt-4">
+                        <Link href={"/admin/equipments/add"}>
+                            <Button variant="outlined" color="primary">add an equipment</Button>
+                        </Link>
+                    </div>
+                </div>
 
                 {isLoading ? (
                     <CircularProgress color="primary" />
@@ -78,9 +111,8 @@ const ListEquipments = () => {
                             </TableHead>
 
                             <TableBody>
-                                {allEquipment?.map((equipment) => (
+                                {(searchedEquipments && searchedEquipments.length > 0 ? searchedEquipments : allEquipment)?.map((equipment) => (
                                     <TableRow key={equipment._id} sx={{ "&:hover": { backgroundColor: "#f9f9f9" } }}>
-
                                         <TableCell>
                                             <Image
                                                 src={equipment.image}
@@ -91,7 +123,6 @@ const ListEquipments = () => {
                                                 style={{ borderRadius: "8px" }}
                                             />
                                         </TableCell>
-
 
                                         <TableCell>
                                             <Typography variant="body1" fontWeight="bold">

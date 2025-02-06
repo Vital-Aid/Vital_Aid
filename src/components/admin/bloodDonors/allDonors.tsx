@@ -7,12 +7,24 @@ import Image from "next/image";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import Link from "next/link";
 import { Button } from "@mui/material";
+import { Donor } from "@/lib/store/features/donorsSlice";
 
 function AllDonors() {
   const { donors, loading, error, totalPages } = useAppSelector((state) => state.donors);
   const [currentPage, setCurrentPage] = useState(1);
+  const [group,setgroup]=useState<string>("All")
+  const[donorsbygroup,setDonorsbygroup]=useState<Donor[]|null>(null)
   console.log(donors, "donors");
-
+  console.log('grp:',group);
+  
+useEffect(()=>{
+  if(group=="All"){
+    setDonorsbygroup(null)
+  }else{
+    const filterddonor=donors.filter((donor)=>donor.BloodGroup==group)
+    setDonorsbygroup(filterddonor)
+  }
+},[group])
   const dispatch = useAppDispatch();
   const router = useRouter();
 
@@ -46,11 +58,32 @@ function AllDonors() {
       <h2 className="text-2xl font-bold text-gray-700 dark:text-white mb-4 text-center">
         All Donors
       </h2>
-      <div className="flex justify-end items-end pr-1 md:pb-4">
+<div className='flex justify-between mb-3 w-full '>
+    <div>
+      <select
+            defaultValue="All"
+            onChange={(e)=>setgroup(e.target.value)}
+            className="h-10 w-28 border rounded-lg focus:ring bg-sky-50"
+          >
+            <option value="All" >
+              All
+            </option>
+            <option value="A+">A+</option>
+            <option value="A-">A-</option>
+            <option value="B+">B+</option>
+            <option value="B-">B-</option>
+            <option value="O+">O+</option>
+            <option value="O-">O-</option>
+            <option value="AB+">AB+</option>
+            <option value="AB-">AB-</option>
+          </select>
+      </div>
+      <div className="pr-1 mt-4">
         <Link href={"/admin/addDonors"}>
           <Button variant="outlined">Add a Donor</Button>
         </Link>
       </div>
+ </div>
       <div className="overflow-x-auto">
         <table className="w-full border-collapse border border-gray-300 dark:border-gray-700 rounded-lg overflow-hidden text-center">
           <thead className="bg-gray-100 dark:bg-gray-700">
@@ -78,7 +111,7 @@ function AllDonors() {
             </tr>
           </thead>
           <tbody>
-            {donors.map((donor) => (
+            {(donorsbygroup?donorsbygroup:donors)?.map((donor) => (
               <tr
                 key={donor._id}
                 className="hover:bg-gray-50 transition-colors"
