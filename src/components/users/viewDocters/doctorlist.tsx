@@ -7,9 +7,12 @@ import Image from "next/image";
 
 interface Doctor {
   description: string;
+  doctor:{
   email: string;
   name: string;
   phone: string;
+  _id:string;
+  }
   _id: string;
   profileImage: string;
   qualification: string[];
@@ -23,6 +26,7 @@ function DoctorList() {
     ? doctors.data?.data
     : [];
 
+    
   return (
     <div className="max-w-6xl mx-auto p-6">
       <h2 className="text-3xl font-bold text-center mb-8 text-gray-800">
@@ -35,26 +39,21 @@ function DoctorList() {
               key={index}
               className="flex flex-col items-center text-center  p-4 rounded-lg"
             >
-              {/* Profile Image (Fixed Size) */}
               <div className="w-44 h-44 rounded-full overflow-hidden border-blue-500">
                 <Image
                   src={doctor.profileImage}
-                  alt={doctor.name || "Doctor profile image"}
+                  alt={"Doctor profile image"}
                   width={175}
                   height={175}
                   className="w-full h-full object-cover"
                 />
               </div>
 
-              {/* Doctor Name */}
-              <h3 className="text-lg font-semibold mt-3">{doctor.name}</h3>
+              <h3 className="text-lg font-semibold mt-3">{doctor.doctor?.name}</h3>
 
-              {/* Qualifications */}
-              <p className="text-sm text-gray-500">{doctor.qualification.join(", ")}</p>
 
-              {/* View Profile Link */}
               <Link
-                href={`/doctor/${doctor._id}`}
+                href={`/user/doctors/doctor/${doctor.doctor?._id}`}
                 className="mt-3 text-blue-600 font-medium hover:underline"
               >
                 View Profile

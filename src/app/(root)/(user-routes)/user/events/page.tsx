@@ -1,12 +1,12 @@
 import Footer from '@/components/ui/footer'
-import Doctorlist from '@/components/users/viewDocters/doctorlist'
+import Events from '@/components/users/viewEvents/events'
 import React from 'react'
 
 function Page() {
   return (
     <div>
-        <Doctorlist/>
-                    <Footer/>
+        <Events/>
+            <Footer/>
         
     </div>
   )

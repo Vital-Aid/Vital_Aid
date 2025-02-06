@@ -58,7 +58,7 @@ export default function Navbar() {
                   Volunteers
                 </Link>
                 <Link onClick={() => setDropdownOpen(!dropdownOpen)}
-                  href="/events"
+                  href="/user/events"
                   className="block px-4 py-2 font-serif font-semibold text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
                 >
                   Events

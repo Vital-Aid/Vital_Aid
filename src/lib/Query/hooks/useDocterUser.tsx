@@ -2,7 +2,7 @@
 import axiosInstance from "@/utils/axios"
 import { useQuery } from "@tanstack/react-query"
  
-const fetchDoctors=()=>{
+const fetchDoctors= async()=>{
     return axiosInstance.get("/doctors/getAllDoctors")
 }
 

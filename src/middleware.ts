@@ -8,7 +8,9 @@ const isDoctorProtectedRoute = (route: string) => route.startsWith("/doctor") &&
 export function middleware(req: NextRequest) {
   
   const userType = req.cookies.get("user")?.value;
-  const token = req.cookies.get("refreshmentToken")?.value || req.cookies.get("accessToken")?.value;
+  const token = req.cookies.get("refreshToken")?.value || req.cookies.get("accessToken")?.value;
+  console.log(token);
+  
   const url = req.nextUrl.clone();
   const pathName = url.pathname;
   
@@ -30,9 +32,11 @@ export function middleware(req: NextRequest) {
     }
   }
 
-
   if (!token && isUserProtectedRoute(pathName)) {
-    url.pathname = "/";
+    if (req.headers.get("referer")?.includes("/user")) {
+      return NextResponse.next(); 
+    }
+    url.pathname = "/"; 
     return NextResponse.redirect(url);
   }
 
