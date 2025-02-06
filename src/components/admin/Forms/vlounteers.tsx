@@ -27,6 +27,15 @@ const initialState: formValue = {
     image: null
 }
 
+type formvalue={
+    imageUrl: string | null;
+    name: string;
+    phone: number | string;
+    gender: "male" | "female" | null;
+    image: File | null;
+} 
+
+
 const Vlounteers = () => {
     const route = useRouter()
     const dispatch = useAppDispatch()
@@ -83,16 +92,10 @@ const Vlounteers = () => {
         }
     };
 
-    type formvalue={
-        imageUrl: string | null;
-        name: string;
-        phone: number | string;
-        gender: "male" | "female" | null;
-        image: File | null;
-    } 
-
+ 
 
     const { values, errors, handleChange, handleBlur, handleSubmit, touched, setFieldValue } = useFormik({
+
         initialValues: initialState,
         validationSchema: volunteerSchema,
         onSubmit: async () => {

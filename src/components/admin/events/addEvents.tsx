@@ -53,7 +53,6 @@ const AddEvents = () => {
       alert("Please select an image");
       return;
     }
-
     try {
       const eventData = {
         ...data,
