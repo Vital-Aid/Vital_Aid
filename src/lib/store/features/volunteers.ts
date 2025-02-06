@@ -67,9 +67,9 @@ export const searchVolunteers = createAsyncThunk<
         const response = await axiosInstance.get('/admin/searchvolunteer', {
             params: { q: query } 
         });
-        console.log('ehgfeu',query);
+        // console.log('ehgfeu',query);
         
-        console.log('response:',response.data);
+        // console.log('response:',response.data);
         
         return response.data; 
     } catch (error) {
@@ -132,10 +132,12 @@ const volunteerSlice = createSlice({
                 state.error = null;
                 state.isLoading = false;
                 state.searchedVolunteers = action.payload; 
+                console.log(action.payload);
+                
             })
             .addCase(searchVolunteers.rejected, (state, action) => {
                 state.error = action.payload || 'An error occurred';
-                state.isLoading = false;
+                state.isLoading = false;                
                 state.searchedVolunteers=null
             });
     }

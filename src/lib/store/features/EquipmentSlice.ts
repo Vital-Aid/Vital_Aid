@@ -67,7 +67,21 @@ export const addnewEquipment = createAsyncThunk<
 
 export const getallEquipment = createAsyncThunk<{ allEquipment: Equipment[], totalPages: number }, number, { rejectValue: string }>('getequipments', async (page, { rejectWithValue }) => {
     try {
+        
         const response = await axiosInstance.get(`/equipment/getequipments?page=${page}&limit=3`)
+        return {
+            allEquipment: response.data.allEquipment,
+            totalPages: response.data.totalPages
+        }
+    } catch (error) {
+        return rejectWithValue(axiosErrorManager(error));
+    }
+})
+
+export const getallEquipmentforuser = createAsyncThunk<{ allEquipment: Equipment[], totalPages: number }, number, { rejectValue: string }>('getequipmentsforuser', async (page, { rejectWithValue }) => {
+    try {
+        
+        const response = await axiosInstance.get(`/users/getallequipment?page=${page}&limit=6`)
         return {
             allEquipment: response.data.allEquipment,
             totalPages: response.data.totalPages
@@ -148,7 +162,25 @@ const equipmentSlice = createSlice({
                 state.error = action.payload || 'An error occurred';
                 state.isLoading = false;
                 state.searchedEquipments=[]
-            });
+            })
+
+            .addCase(getallEquipmentforuser.pending, (state) => {
+                state.error = null
+                state.isLoading = true
+            })
+
+            .addCase(getallEquipmentforuser.fulfilled, (state, action: PayloadAction<{allEquipment:Equipment[],totalPages: number}>) => {
+                state.error = null
+                state.allEquipment = action.payload.allEquipment
+                state.isLoading = false
+                state.totalPages=action.payload.totalPages
+            })
+
+            .addCase(getallEquipmentforuser.rejected, (state, action) => {
+                state.error = action.payload || "An unknown error occurred"
+                state.isLoading = false
+            })
+
     }
 });
 

@@ -32,7 +32,10 @@ export function middleware(req: NextRequest) {
 
 
   if (!token && isUserProtectedRoute(pathName)) {
-    url.pathname = "/";
+    if (req.headers.get("referer")?.includes("/user")) {
+      return NextResponse.next(); 
+    }
+    url.pathname = "/"; 
     return NextResponse.redirect(url);
   }
 

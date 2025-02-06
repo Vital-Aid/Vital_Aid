@@ -1,10 +1,11 @@
-import Equipments from '@/components/admin/Forms/equipments'
+
+import Equipmentsuser from '@/components/users/Home/equipments'
 import React from 'react'
 
 const Page = () => {
   return (
     <div>
-      <Equipments/>
+      <Equipmentsuser/>
     </div>
   )
 }
