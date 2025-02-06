@@ -1,5 +1,3 @@
-
-
 "use client";
 import { getallEquipment, searchEQuipment } from "@/lib/store/features/EquipmentSlice";
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
@@ -11,26 +9,29 @@ import Link from "next/link";
 import axiosInstance from "@/utils/axios";
 import axiosErrorManager from "@/utils/axiosErrormanager";
 import {
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow,
-    Paper,
-    IconButton,
-    Typography,
-    CircularProgress,
-    Button,
-    TextField
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  IconButton,
+  Typography,
+  CircularProgress,
+  Button,
+  Box,
+  Pagination,
 } from "@mui/material";
 import { debounce } from "lodash";
 
 
 const ListEquipments = () => {
-    const { allEquipment, isLoading, totalPages, searchedEquipments } = useAppSelector((state) => state.equipments);
-    const dispatch = useAppDispatch();
-    const [currentPage, setCurrentPage] = useState(1);
+  const { allEquipment, isLoading, totalPages, searchedEquipments } = useAppSelector(
+    (state) => state.equipments
+  );
+  const dispatch = useAppDispatch();
+  const [currentPage, setCurrentPage] = useState(1);
     const [query, setQuery] = useState<string>('')
 
     const debounsedsearch = useCallback(
@@ -55,17 +56,20 @@ const ListEquipments = () => {
 
     }, [dispatch, currentPage, query]);
 
-    const deleteEquipments = async (id: string) => {
-        try {
-            await axiosInstance.put(`/equipment/deleteEquipment/${id}`);
-            await dispatch(getallEquipment(currentPage));
-        } catch (error) {
-            axiosErrorManager(error);
-        }
-    };
-    const handlePageChange = (newPage: number) => {
-        setCurrentPage(newPage);
-    };
+  const deleteEquipments = async (id: string) => {
+    try {
+      await axiosInstance.put(`/equipment/deleteEquipment/${id}`);
+      await dispatch(getallEquipment(currentPage));
+    } catch (error) {
+      axiosErrorManager(error);
+    }
+  };
+  const handlePageChange = (
+    event: React.ChangeEvent<unknown>,
+    page: number
+  ) => {
+    setCurrentPage(page);
+  };
 
     return (
         <>
@@ -94,21 +98,32 @@ const ListEquipments = () => {
                     </div>
                 </div>
 
-                {isLoading ? (
-                    <CircularProgress color="primary" />
-                ) : (
-                    <TableContainer component={Paper} sx={{ maxWidth: "90%", overflowX: "auto" }}>
-                        <Table>
-
-                            <TableHead>
-                                <TableRow sx={{ backgroundColor: "#f5f5f5" }}>
-                                    <TableCell><strong>Image</strong></TableCell>
-                                    <TableCell><strong>Name</strong></TableCell>
-                                    <TableCell><strong>Available</strong></TableCell>
-                                    <TableCell><strong>Description</strong></TableCell>
-                                    <TableCell align="center"><strong>Actions</strong></TableCell>
-                                </TableRow>
-                            </TableHead>
+        {isLoading ? (
+          <CircularProgress color="primary" />
+        ) : (
+          <TableContainer
+            component={Paper} elevation={2}
+          >
+            <Table>
+              <TableHead>
+                <TableRow sx={{ backgroundColor: "#f5f5f5" }}>
+                  <TableCell>
+                    <strong>Image</strong>
+                  </TableCell>
+                  <TableCell>
+                    <strong>Name</strong>
+                  </TableCell>
+                  <TableCell>
+                    <strong>Available</strong>
+                  </TableCell>
+                  <TableCell>
+                    <strong>Description</strong>
+                  </TableCell>
+                  <TableCell align="center">
+                    <strong>Actions</strong>
+                  </TableCell>
+                </TableRow>
+              </TableHead>
 
                             <TableBody>
                                 {(searchedEquipments && searchedEquipments.length > 0 ? searchedEquipments : allEquipment)?.map((equipment) => (
@@ -124,59 +139,50 @@ const ListEquipments = () => {
                                             />
                                         </TableCell>
 
-                                        <TableCell>
-                                            <Typography variant="body1" fontWeight="bold">
-                                                {equipment.name}
-                                            </Typography>
-                                        </TableCell>
+                    <TableCell>
+                      <Typography variant="body1" fontWeight="bold">
+                        {equipment.name}
+                      </Typography>
+                    </TableCell>
 
-                                        <TableCell>{equipment.quantity}</TableCell>
+                    <TableCell>{equipment.quantity}</TableCell>
 
-                                        <TableCell sx={{ maxWidth: 300, wordWrap: "break-word" }}>
-                                            {equipment.description}
-                                        </TableCell>
+                    <TableCell sx={{ maxWidth: 300, wordWrap: "break-word" }}>
+                      {equipment.description}
+                    </TableCell>
 
-                                        <TableCell align="center">
-                                            <IconButton onClick={() => deleteEquipments(equipment._id)} color="error">
-                                                <MdDeleteForever />
-                                            </IconButton>
-                                            <Link href={`/admin/equipments/edit/${equipment._id}`}>
-                                                <IconButton color="primary">
-                                                    <RiEdit2Fill />
-                                                </IconButton>
-                                            </Link>
-                                        </TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
-                )}
-                <div className="flex justify-center mt-4 gap-2">
-                    <button
-                        onClick={() => handlePageChange(currentPage - 1)}
-                        disabled={currentPage === 1}
-                        className="px-4 py-2 border rounded disabled:opacity-50"
-                    >
-                        Previous
-                    </button>
-                    <span className="px-4 py-2">
-                        Page {currentPage} of {totalPages}
-                    </span>
-
-                    <button
-                        onClick={() => handlePageChange(currentPage + 1)}
-                        disabled={currentPage === totalPages}
-                        className="px-4 py-2 border rounded disabled:opacity-50"
-                    >
-                        Next
-                    </button>
-                </div>
-            </div>
-
-        </>
-
-    );
+                    <TableCell align="center">
+                      <IconButton
+                        onClick={() => deleteEquipments(equipment._id)}
+                        color="error"
+                      >
+                        <MdDeleteForever />
+                      </IconButton>
+                      <Link href={`/admin/equipments/edit/${equipment._id}`}>
+                        <IconButton color="primary">
+                          <RiEdit2Fill />
+                        </IconButton>
+                      </Link>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        )}
+        <Box display="flex" justifyContent="center" sx={{ mt: 3 }}>
+          <Pagination
+            count={totalPages}
+            page={currentPage}
+            onChange={handlePageChange}
+            color="primary"
+            variant="outlined"
+            shape="rounded"
+          />
+        </Box>
+      </div>
+    </>
+  );
 };
 
 export default ListEquipments;
