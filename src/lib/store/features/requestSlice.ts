@@ -2,25 +2,28 @@ import axiosErrorManager from "@/utils/axiosErrormanager";
 import axiosInstance from "@/utils/axios";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
-interface User {
+
+type RequestStatus = "pending" | "accepted" | "delivered" | "cancelled" | null;
+export interface User {
     _id: string;
     name: string;
     email: string;
   }
   
-  interface Equipment {
+  export interface Equipment {
     _id: string;
     name: string;
     quantity: number;
     description: string;
+    image:string
   }
   
-  interface Request {
+  export interface Request {
     _id: string;
     user: User |null;
-    equipment: Equipment[] |null;
+    equipment: Equipment |null;
     location: string;
-    status: "pending"|"accepted"|"deliverd"|"cancell"; 
+    status: RequestStatus
     __v: number;
   }
 
@@ -39,40 +42,28 @@ interface User {
     error:null
   }
 
-  export const getallRequest = createAsyncThunk<{ allRequest: Request[], totalPages: number }, number, { rejectValue: string }>('getallRequest', async (page, { rejectWithValue }) => {
-    try {
+//   export const getallRequest = createAsyncThunk<{ allRequest: Request[], totalPages: number }, number, { rejectValue: string }>('getallRequest', async (page, { rejectWithValue }) => {
+//     try {
         
-        const response = await axiosInstance.get(`/users/userrequest?page=${page}&limit=3`)
-        return {
-            allRequest: response.data.allEquipment,
-            totalPages: response.data.totalPages
-        }
-    } catch (error) {
-        return rejectWithValue(axiosErrorManager(error));
-    }
-})
+//         const response = await axiosInstance.get(`/users/userrequest?page=${page}&limit=3`)
+//         return {
+//             allRequest: response.data.allEquipment,
+//             totalPages: response.data.totalPages
+//         }
+//     } catch (error) {
+//         return rejectWithValue(axiosErrorManager(error));
+//     }
+// })
 
 
   const RequestSlice=createSlice({
     name:'request',
     initialState,
     reducers:{},
-    extraReducers:(builders)=>{
-        builders
-        .addCase(getallRequest.pending, (state) => {
-            state.error = null;
-            state.isLoading = true;
-          })
-          .addCase(getallRequest.fulfilled, (state, action) => {
-            state.error = null;
-            state.isLoading = false;
-            state.allRequest = action.payload.allRequest; 
-          })
-          .addCase(getallRequest.rejected, (state, action) => {
-            state.isLoading = false;
-            state.error = action.payload ?? "An error occurred";
-          });
-    }
+    // extraReducers:(builders)=>{
+        
+       
+    // }
   })
 
 
