@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { Avatar, Button, Card, CardContent, CardHeader } from "@mui/material";
 import {
@@ -12,14 +12,47 @@ import {
 } from "react-icons/fa";
 import { FiMail } from "react-icons/fi";
 import { useAppSelector } from "@/lib/store/hooks";
+import axiosInstance from "@/utils/axios";
+import axiosErrorManager from "@/utils/axiosErrormanager";
+import AddReportModal from "@/components/ui/addDetail";
 
 const Home = () => {
   const { user } = useAppSelector((state) => state.auth);
+  const [udetails, setUdetails] = useState<usdetails | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [reports, setReports] = useState<string[]>(["Week 1 Report", "Week 2 Report"]);
+
+  type usdetails = {
+    age: number;
+    gender: string;
+    bloodgroup: string;
+    occupation: string;
+    address: string;
+  };
+  const handleAddReport = (reportName: string) => {
+    setReports([...reports, reportName]);
+    setIsModalOpen(false);
+  };
+
+  console.log(user);
+
+  useEffect(() => {
+    const fetchdetails = async () => {
+      try {
+        const details = await axiosInstance.get(
+          `/users/getdetails/${user?.id}`
+        );
+        setUdetails(details.data[0]);
+      } catch (error) {
+        axiosErrorManager(error);
+      }
+    };
+    fetchdetails();
+  }, [user]);
 
   return (
     <div className="w-full mx-auto p-6 space-y-8 bg-gray-100 min-h-screen">
       <div className="flex flex-col sm:flex-row gap-6">
-        {/* Sidebar - Hidden on small screens */}
         <div className="w-72 bg-white shadow-lg rounded-lg p-6 hidden sm:block">
           <h2 className="text-xl font-bold text-gray-800">
             Welcome, {user?.name}
@@ -60,7 +93,7 @@ const Home = () => {
                 <Image
                   src={
                     user?.profileImage?.originalProfile ||
-                    "/default-profile.png"
+                    "https://i.pinimg.com/736x/ed/fe/67/edfe6702e44cfd7715a92390c7d8a418.jpg"
                   }
                   width={300}
                   height={300}
@@ -74,29 +107,25 @@ const Home = () => {
                 </h2>
                 <div className="space-y-1 text-gray-600 text-sm">
                   <p className="flex items-center gap-2">
-                    <FaClock className="h-4 w-4" /> 29 yrs | Occupation:
-                    Engineer
+                    <FaClock className="h-4 w-4" /> {udetails?.age || "18"} |
+                    Occupation:{udetails?.occupation || "none"}
                   </p>
                   <p className="flex items-center gap-2">
                     <FiMail className="h-4 w-4" /> {user?.email}
                   </p>
                   <p className="flex items-center gap-2">
-                    <FaPhone className="h-4 w-4" /> 781-59485-65
+                    <FaPhone className="h-4 w-4" /> {user?.phone}
                   </p>
                   <p className="flex items-center gap-2">
-                    <FaMapPin className="h-4 w-4" /> Apartment 128, 456 Elm
-                    Street Springfield
+                    <FaMapPin className="h-4 w-4" />{" "}
+                    {udetails?.address || "none"}
                   </p>
+                  <Button variant="text" color="warning">
+                    edit
+                  </Button>
                 </div>
               </div>
             </div>
-            <Button
-              variant="contained"
-              color="primary"
-              className="shadow-md bg-blue-500 hover:bg-blue-600 text-white"
-            >
-              + Add Appointment
-            </Button>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -108,11 +137,12 @@ const Home = () => {
                   }
                 />
                 <Button
-                  variant="contained"
+                  variant="text"
                   color="primary"
                   className="h-10  text-white"
+                  onClick={() => setIsModalOpen(true)}
                 >
-                  + Add Appointment
+                  + Add report
                 </Button>
               </div>
 
@@ -128,13 +158,19 @@ const Home = () => {
               </CardContent>
             </Card>
 
-            {/* Reviews from Doctor */}
             <Card className="shadow-lg">
-              <CardHeader
-                title={
-                  <h3 className="text-lg font-semibold">appoiment history</h3>
-                }
-              />
+              <div className="flex justify-between m-2 ">
+                
+                <CardHeader
+                  title={
+                    <h3 className="text-lg font-semibold">appoiment history</h3>
+                  }
+                />
+                <Button variant="text" color="primary">
+                  + Add Appointment
+                </Button>
+              </div>
+
               <CardContent className="space-y-4">
                 <div className="p-4 bg-gray-50 rounded-lg shadow-sm">
                   View with doctor
@@ -146,7 +182,6 @@ const Home = () => {
             </Card>
           </div>
 
-          {/* Notifications */}
           <Card className="shadow-lg">
             <CardHeader
               title={<h3 className="text-lg font-semibold">Notifications</h3>}
@@ -171,7 +206,6 @@ const Home = () => {
         </div>
       </div>
 
-      {/* Bottom Actions - Shown on small screens only */}
       <div className="fixed bottom-0 left-0 w-full bg-white shadow-lg p-4 flex justify-around items-center sm:hidden">
         <Button
           variant="contained"
@@ -202,6 +236,7 @@ const Home = () => {
           <span className="text-xs">Donors</span>
         </Button>
       </div>
+      <AddReportModal open={isModalOpen} onClose={() => setIsModalOpen(false)} onSubmit={handleAddReport} />
     </div>
   );
 };
