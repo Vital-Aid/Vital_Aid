@@ -182,8 +182,8 @@ const Home = () => {
                     >
                       <div className="flex justify-between items-center">
                         <div className="truncate">
-                          {reportItem.report.substring(30, 60)}
-                          {reportItem.report.length > 50 ? "..." : ""}
+                          {"Report of " + new Date(reportItem.createdAt).toLocaleDateString()}
+                          
                         </div>
                         <div className="text-xs text-gray-500">
                           {new Date(reportItem.createdAt).toLocaleDateString()}
