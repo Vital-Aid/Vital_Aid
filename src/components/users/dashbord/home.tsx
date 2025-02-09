@@ -15,26 +15,32 @@ import { useAppSelector } from "@/lib/store/hooks";
 import axiosInstance from "@/utils/axios";
 import axiosErrorManager from "@/utils/axiosErrormanager";
 import AddReportModal from "@/components/ui/addDetail";
+import ReportModal from "@/components/ui/report";
+
+type UserDetails = {
+  age: number;
+  gender: string;
+  bloodgroup: string;
+  occupation: string;
+  address: string;
+};
+
+type Report = {
+  _id: string;
+  User: string;
+  report: string;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+};
 
 const Home = () => {
   const { user } = useAppSelector((state) => state.auth);
-  const [udetails, setUdetails] = useState<usdetails | null>(null);
+  const [udetails, setUdetails] = useState<UserDetails | null>(null);
+  const [report, setReport] = useState<Report[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [reports, setReports] = useState<string[]>(["Week 1 Report", "Week 2 Report"]);
-
-  type usdetails = {
-    age: number;
-    gender: string;
-    bloodgroup: string;
-    occupation: string;
-    address: string;
-  };
-  const handleAddReport = (reportName: string) => {
-    setReports([...reports, reportName]);
-    setIsModalOpen(false);
-  };
-
-  console.log(user);
+  const [selectedReport, setSelectedReport] = useState<Report | null>(null);
+  const [isReportModalOpen, setIsReportModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchdetails = async () => {
@@ -49,6 +55,27 @@ const Home = () => {
     };
     fetchdetails();
   }, [user]);
+
+  useEffect(() => {
+    const fetchReports = async () => {
+      try {
+        const response = await axiosInstance.get(
+          `/users/getreportof/${user?.id}`
+        );
+        const reportData = response.data || [];
+        console.log(reportData);
+        setReport(reportData);
+      } catch (error) {
+        axiosErrorManager(error);
+      }
+    };
+    fetchReports();
+  }, [user]);
+
+  const handleReportClick = (report: Report) => {
+    setSelectedReport(report);
+    setIsReportModalOpen(true);
+  };
 
   return (
     <div className="w-full mx-auto p-6 space-y-8 bg-gray-100 min-h-screen">
@@ -133,13 +160,12 @@ const Home = () => {
               <div className="flex justify-between m-2 ">
                 <CardHeader
                   title={
-                    <h3 className="text-lg font-semibold ">Medical Report</h3>
+                    <h3 className="text-lg font-semibold">Medical Report</h3>
                   }
                 />
                 <Button
                   variant="text"
                   color="primary"
-                  className="h-10  text-white"
                   onClick={() => setIsModalOpen(true)}
                 >
                   + Add report
@@ -147,20 +173,31 @@ const Home = () => {
               </div>
 
               <CardContent className="space-y-2">
-                {[...Array(5)].map((_, index) => (
-                  <div
-                    key={index}
-                    className="h-10 bg-green-100 rounded p-2 shadow-sm"
-                  >
-                    Week {index + 1} Report
-                  </div>
-                ))}
+                {report.length > 0 ? (
+                  report.map((reportItem) => (
+                    <div
+                      key={reportItem._id}
+                      className="h-auto min-h-10 bg-green-100 rounded p-2 shadow-sm cursor-pointer hover:bg-green-200"
+                      onClick={() => handleReportClick(reportItem)}
+                    >
+                      <div className="flex justify-between items-center">
+                        <div className="truncate">
+                          {reportItem.report.substring(30, 60)}
+                          {reportItem.report.length > 50 ? "..." : ""}
+                        </div>
+                        <div className="text-xs text-gray-500">
+                          {new Date(reportItem.createdAt).toLocaleDateString()}
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-gray-500 text-sm">No reports available</p>
+                )}
               </CardContent>
             </Card>
-
             <Card className="shadow-lg">
               <div className="flex justify-between m-2 ">
-                
                 <CardHeader
                   title={
                     <h3 className="text-lg font-semibold">appoiment history</h3>
@@ -236,7 +273,15 @@ const Home = () => {
           <span className="text-xs">Donors</span>
         </Button>
       </div>
-      <AddReportModal open={isModalOpen} onClose={() => setIsModalOpen(false)} onSubmit={handleAddReport} />
+      <AddReportModal
+        open={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
+      <ReportModal
+        open={isReportModalOpen}
+        onClose={() => setIsReportModalOpen(false)}
+        report={selectedReport}
+      />
     </div>
   );
 };

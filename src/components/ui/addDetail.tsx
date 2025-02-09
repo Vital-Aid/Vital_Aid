@@ -8,66 +8,105 @@ import {
   Button,
   TextField,
 } from "@mui/material";
+import axiosInstance from "@/utils/axios";
+import { useAppSelector } from "@/lib/store/hooks";
 
 interface AddReportModalProps {
   open: boolean;
   onClose: () => void;
-  onSubmit: (reportData: ReportData) => void;
 }
 
 interface ReportData {
+  userid: string | null,
+  age: string;
+  name: string;
   height: string;
   weight: string;
   pressureRate: string;
   sugarRate: string;
   cholesterol: string;
-  healthStatus: string;
   allergies: string;
   otherDiseases: string;
   aboutYou: string;
 }
 
-const AddReportModal: React.FC<AddReportModalProps> = ({
-  open,
-  onClose,
-  onSubmit,
-}) => {
+const AddReportModal: React.FC<AddReportModalProps> = ({ open, onClose }) => {
+  const { user } = useAppSelector((state) => state.auth);
+
   const [reportData, setReportData] = useState<ReportData>({
+    userid: user?.id ?? null,
+    name: "",
+    age: "",
     height: "",
     weight: "",
     pressureRate: "",
     sugarRate: "",
     cholesterol: "",
-    healthStatus: "",
     allergies: "",
     otherDiseases: "",
     aboutYou: "",
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setReportData({ ...reportData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setReportData((prev) => ({
+      ...prev,
+      [name]: name === "age" ? Number(value) : value, // Convert age to a number
+    }));
   };
 
-  const handleSubmit = () => {
-    onSubmit(reportData);
-    setReportData({
-      height: "",
-      weight: "",
-      pressureRate: "",
-      sugarRate: "",
-      cholesterol: "",
-      healthStatus: "",
-      allergies: "",
-      otherDiseases: "",
-      aboutYou: "",
-    });
+  const handleSubmit = async () => {
+    try {
+      const response = await axiosInstance.post("users/generatereport", reportData);
+      console.log("Report Submitted:", response?.data?.report);
+
+
+
+
+      setReportData({
+        userid: user?.id ?? null,
+        name: "",
+        age: "",
+        height: "",
+        weight: "",
+        pressureRate: "",
+        sugarRate: "",
+        cholesterol: "",
+        allergies: "",
+        otherDiseases: "",
+        aboutYou: "",
+      });
+
+      onClose();
+    } catch (error) {
+      console.error("Error submitting report:", error);
+    }
   };
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
       <DialogTitle>Add Medical Report</DialogTitle>
       <DialogContent>
+        <TextField
+          fullWidth
+          label="Name"
+          name="name"
+          variant="outlined"
+          value={reportData.name}
+          onChange={handleChange}
+          margin="dense"
+        />
         <div className="flex justify-between gap-3">
+          <TextField
+            fullWidth
+            label="Age"
+            name="age"
+            type="number" // Ensure age input is numeric
+            variant="outlined"
+            value={reportData.age}
+            onChange={handleChange}
+            margin="dense"
+          />
           <TextField
             fullWidth
             label="Height"
@@ -119,17 +158,6 @@ const AddReportModal: React.FC<AddReportModalProps> = ({
           />
           <TextField
             fullWidth
-            label="Current Health Status"
-            name="healthStatus"
-            variant="outlined"
-            value={reportData.healthStatus}
-            onChange={handleChange}
-            margin="dense"
-          />
-        </div>
-        <div className="flex justify-between gap-3">
-          <TextField
-            fullWidth
             label="Allergies"
             name="allergies"
             variant="outlined"
@@ -137,22 +165,14 @@ const AddReportModal: React.FC<AddReportModalProps> = ({
             onChange={handleChange}
             margin="dense"
           />
-          <TextField
-            fullWidth
-            label="Other Diseases"
-            name="otherDiseases"
-            variant="outlined"
-            value={reportData.otherDiseases}
-            onChange={handleChange}
-            margin="dense"
-          />
         </div>
+
         <TextField
           fullWidth
-          label="About You"
-          name="aboutYou"
+          label="Other Diseases"
+          name="otherDiseases"
           variant="outlined"
-          value={reportData.aboutYou}
+          value={reportData.otherDiseases}
           onChange={handleChange}
           margin="dense"
         />
@@ -162,7 +182,7 @@ const AddReportModal: React.FC<AddReportModalProps> = ({
           Cancel
         </Button>
         <Button onClick={handleSubmit} color="primary" variant="contained">
-          Add Report
+          Assess the Report
         </Button>
       </DialogActions>
     </Dialog>
