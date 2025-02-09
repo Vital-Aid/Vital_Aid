@@ -33,7 +33,7 @@ const EventById: React.FC = () => {
         </div>
 
         <div className="space-y-4">
-          <h1 className="text-4xl font-bold text-gray-800">{event.event?.title}</h1>
+          <h1 className="text-3xl font-medium  text-red-950">{event.event?.title}</h1>
 
           <div className="flex items-center text-gray-600">
             <FaCalendarAlt className="text-blue-500 mr-2" />
