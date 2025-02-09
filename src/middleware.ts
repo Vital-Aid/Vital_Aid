@@ -9,8 +9,6 @@ export function middleware(req: NextRequest) {
   
   const userType = req.cookies.get("user")?.value;
   const token = req.cookies.get("refreshToken")?.value || req.cookies.get("accessToken")?.value;
-  console.log(token);
-  
   const url = req.nextUrl.clone();
   const pathName = url.pathname;
   
