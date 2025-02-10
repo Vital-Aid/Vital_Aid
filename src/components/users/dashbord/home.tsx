@@ -16,6 +16,7 @@ import axiosInstance from "@/utils/axios";
 import axiosErrorManager from "@/utils/axiosErrormanager";
 import AddReportModal from "@/components/ui/addDetail";
 import ReportModal from "@/components/ui/report";
+import { useRouter } from "next/navigation";
 
 type UserDetails = {
   age: number;
@@ -41,6 +42,7 @@ const Home = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedReport, setSelectedReport] = useState<Report | null>(null);
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
+  const Router = useRouter();
 
   useEffect(() => {
     const fetchdetails = async () => {
@@ -70,7 +72,7 @@ const Home = () => {
       }
     };
     fetchReports();
-  }, [user]);
+  }, [user, report]);
 
   const handleReportClick = (report: Report) => {
     setSelectedReport(report);
@@ -81,34 +83,49 @@ const Home = () => {
     <div className="w-full mx-auto p-6 space-y-8 bg-gray-100 min-h-screen">
       <div className="flex flex-col sm:flex-row gap-6">
         <div className="w-72 bg-white shadow-lg rounded-lg p-6 hidden sm:block">
-          <h2 className="text-xl font-bold text-gray-800">
+          <h2 className="text-xl font-bold text-gray-800 text-center">
             Welcome, {user?.name}
           </h2>
-          <h3 className="font-medium text-gray-600 mt-4">Quick Actions</h3>
+          <h3 className="font-bold text-green-600 mt-4 text-center">Quick Actions</h3>
           <div className="space-y-3 mt-4">
             <Button
+              onClick={() => Router.push("/user/bloodDonors")}
               variant="contained"
               className="w-full flex items-center gap-3 bg-red-500 hover:bg-red-600 text-white py-2"
             >
               <FaHeart className="w-5 h-5" /> Request Blood
             </Button>
+
             <Button
+              onClick={() => Router.push("/user/equipments")}
               variant="contained"
               className="w-full flex items-center gap-3 bg-blue-500 hover:bg-blue-600 text-white py-2"
             >
-              <FaUser className="w-5 h-5" /> Request Medical Equipment
+              <FaUser className="w-5 h-5" /> Medical Equipment
             </Button>
             <Button
+              onClick={() => Router.push("/user/events")}
+              variant="contained"
+              className="w-full flex items-center gap-3 bg-blue-500 hover:bg-blue-600 text-white py-2"
+            >
+              <FaUser className="w-5 h-5" />
+              our Events
+            </Button>
+
+            <Button
+              onClick={() => Router.push("/user/doctors")}
               variant="contained"
               className="w-full flex items-center gap-3 bg-green-500 hover:bg-green-600 text-white py-2"
             >
               <FaStethoscope className="w-5 h-5" /> Consult a Doctor
             </Button>
+
             <Button
+              onClick={() => Router.push("/user/volunteers")}
               variant="contained"
               className="w-full flex items-center gap-3 bg-purple-500 hover:bg-purple-600 text-white py-2"
             >
-              <FaUser className="w-5 h-5" /> View our donors
+              <FaUser className="w-5 h-5" />our volunteers
             </Button>
           </div>
         </div>
@@ -157,7 +174,7 @@ const Home = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <Card className="shadow-lg">
-              <div className="flex justify-between m-2 ">
+              <div className="flex justify-between m-2 overflow-y-auto scrollbar-none">
                 <CardHeader
                   title={
                     <h3 className="text-lg font-semibold">Medical Report</h3>
@@ -182,8 +199,8 @@ const Home = () => {
                     >
                       <div className="flex justify-between items-center">
                         <div className="truncate">
-                          {"Report of " + new Date(reportItem.createdAt).toLocaleDateString()}
-                          
+                          {"Report of " +
+                            new Date(reportItem.createdAt).toLocaleDateString()}
                         </div>
                         <div className="text-xs text-gray-500">
                           {new Date(reportItem.createdAt).toLocaleDateString()}
@@ -243,34 +260,50 @@ const Home = () => {
         </div>
       </div>
 
-      <div className="fixed bottom-0 left-0 w-full bg-white shadow-lg p-4 flex justify-around items-center sm:hidden">
+      <div className="fixed bottom-0 left-0 w-full bg-white shadow-lg p-4 flex justify-around items-center gap-2 sm:hidden">
         <Button
+          onClick={() => Router.push("/user/events")}
           variant="contained"
           className="flex flex-col items-center gap-1 bg-red-500 hover:bg-red-600 text-white py-2"
         >
           <FaHeart className="w-5 h-5" />
-          <span className="text-xs">Blood</span>
+          <span className="text-xs">events</span>
         </Button>
+
         <Button
+          onClick={() => Router.push("/user/equipments")}
           variant="contained"
           className="flex flex-col items-center gap-1 bg-blue-500 hover:bg-blue-600 text-white py-2"
         >
           <FaUser className="w-5 h-5" />
           <span className="text-xs">Equipment</span>
         </Button>
+
         <Button
+          onClick={() => Router.push("/user/doctors")}
           variant="contained"
           className="flex flex-col items-center gap-1 bg-green-500 hover:bg-green-600 text-white py-2"
         >
           <FaStethoscope className="w-5 h-5" />
           <span className="text-xs">Doctor</span>
         </Button>
+
         <Button
+          onClick={() => Router.push("/user/bloodDonors")}
           variant="contained"
           className="flex flex-col items-center gap-1 bg-purple-500 hover:bg-purple-600 text-white py-2"
         >
           <FaUser className="w-5 h-5" />
           <span className="text-xs">Donors</span>
+        </Button>
+
+        <Button
+          onClick={() => Router.push("/user/volunteers")}
+          variant="contained"
+          className="flex flex-col items-center gap-1 bg-purple-500 hover:bg-purple-600 text-white py-2"
+        >
+          <FaUser className="w-5 h-5" />
+          <span className="text-xs">volunteers</span>
         </Button>
       </div>
       <AddReportModal

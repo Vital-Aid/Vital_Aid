@@ -14,9 +14,9 @@ export default function Navbar() {
     <nav className="bg-white border-b border-gray-200 dark:bg-gray-900 w-full shadow-md">
       <div className="container mx-auto flex items-center justify-between py-4 px-6">
        
-        <div className="text-xl font-bold text-gray-900 dark:text-white">
+        <Link href={"/user"} className="text-xl font-bold text-gray-900 dark:text-white" >
           Vital Aid
-        </div>
+        </Link>
 
         <div className="lg:hidden">
           <button

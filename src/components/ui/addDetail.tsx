@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import axiosInstance from "@/utils/axios";
 import { useAppSelector } from "@/lib/store/hooks";
+import toast from "react-hot-toast";
 
 interface AddReportModalProps {
   open: boolean;
@@ -17,7 +18,7 @@ interface AddReportModalProps {
 }
 
 interface ReportData {
-  userid: string | null,
+  userid: string | null;
   age: string;
   name: string;
   height: string;
@@ -32,6 +33,7 @@ interface ReportData {
 
 const AddReportModal: React.FC<AddReportModalProps> = ({ open, onClose }) => {
   const { user } = useAppSelector((state) => state.auth);
+  const [Loading, setLoading] = useState(false);
 
   const [reportData, setReportData] = useState<ReportData>({
     userid: user?.id ?? null,
@@ -57,11 +59,12 @@ const AddReportModal: React.FC<AddReportModalProps> = ({ open, onClose }) => {
 
   const handleSubmit = async () => {
     try {
-      const response = await axiosInstance.post("users/generatereport", reportData);
+      setLoading(true);
+      const response = await axiosInstance.post(
+        "users/generatereport",
+        reportData
+      );
       console.log("Report Submitted:", response?.data?.report);
-
-
-
 
       setReportData({
         userid: user?.id ?? null,
@@ -77,9 +80,13 @@ const AddReportModal: React.FC<AddReportModalProps> = ({ open, onClose }) => {
         aboutYou: "",
       });
 
-      onClose();
+      toast.success("Your report is ready! Check it.");
     } catch (error) {
       console.error("Error submitting report:", error);
+      toast.error("Failed to generate report. Try again.");
+    } finally {
+      setLoading(false);
+      onClose();
     }
   };
 
@@ -176,13 +183,23 @@ const AddReportModal: React.FC<AddReportModalProps> = ({ open, onClose }) => {
           onChange={handleChange}
           margin="dense"
         />
+        {Loading && (
+          <div className="text-center text-blue-600 font-medium mt-2">
+            Generating your medical report with VitalAid AI... Please wait.
+          </div>
+        )}
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose} color="secondary">
           Cancel
         </Button>
-        <Button onClick={handleSubmit} color="primary" variant="contained">
-          Assess the Report
+        <Button
+          onClick={handleSubmit}
+          color="primary"
+          variant="contained"
+          disabled={Loading}
+        >
+          {Loading ? "Analyzing Data..." : "Generate Medical Report"}
         </Button>
       </DialogActions>
     </Dialog>

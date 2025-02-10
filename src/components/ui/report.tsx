@@ -48,12 +48,12 @@ const ReportModal: React.FC<ReportModalProps> = ({ open, onClose, report }) => {
     };
 
     return (
-        <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
+        <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth >
             <DialogTitle>Medical Report Details</DialogTitle>
-            <DialogContent>
+            <DialogContent className="scrollbar-none">
                 {report ? (
                     <>
-                        <div className="text-gray-700 whitespace-pre-wrap mt-4">
+                        <div className="text-gray-700 whitespace-pre-wrap mt-4 " >
                             {report.report}
                         </div>
                         <div className="flex justify-end gap-4 mt-4">
