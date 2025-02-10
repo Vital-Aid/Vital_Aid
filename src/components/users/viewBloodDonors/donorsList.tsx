@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import axiosInstance from "@/utils/axios";
 import React, { useState } from "react";
 import Image from "next/image";
+import HowItWorks from "./Howitwork";
 
 export interface Donor {
   _id: string;
@@ -61,15 +62,9 @@ const DonorsList: React.FC = () => {
 
   return (
     <div className="max-w-full mx-auto p-5 w-full">
-      <h1 className="text-3xl font-semibold text-red-900 text-center mb-6">
-        Blood Donors: Lifesavers at Your Service
-      </h1>
-      <p className="text-lg text-gray-700 text-center mb-8">
-        Need a blood donor? Here's a list of volunteers ready to help. Browse,
-        connect, and save lives!
-      </p>
+     <HowItWorks/>
 
-      <div className="mb-6 flex justify-center gap-4">
+      <div className="mb-6 flex mt-3 justify-center gap-4">
         <input
           type="text"
           placeholder="Search by Name"
