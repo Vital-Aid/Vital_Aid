@@ -15,12 +15,12 @@ const handleClick=()=>{
   setClick(!click)
 }
   return (
-    <nav className="bg-sky-50 border-b border-gray-200 dark:bg-gray-900 w-full shadow-md">
+    <nav className="bg-white border-b border-gray-200 dark:bg-gray-900 w-full shadow-md">
       <div className="container mx-auto flex items-center justify-between py-4 px-6">
        
-        <div className="text-xl font-bold text-gray-900 dark:text-white">
+        <Link href={"/user"} className="text-xl font-bold text-gray-900 dark:text-white" >
           Vital Aid
-        </div>
+        </Link>
 
         <div className="lg:hidden">
           <button
@@ -35,14 +35,14 @@ const handleClick=()=>{
           className={`hidden lg:flex lg:items-center lg:space-x-8`}
         >
           <Link
-            href="/home"
+            href="/user"
             className="block text-gray-700 font-serif font-semibold dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition py-2 lg:py-0"
           >
             Home
           </Link>
           <div className="relative">
             <button
-              onClick={() => setDropdownOpen(!dropdownOpen)}
+              onMouseEnter={() => setDropdownOpen(!dropdownOpen)}
               className="block text-gray-700 font-serif font-semibold dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition py-2 lg:py-0"
             >
               Services
