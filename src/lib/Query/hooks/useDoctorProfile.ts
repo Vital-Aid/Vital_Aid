@@ -15,8 +15,8 @@ export const useDoctorProfile = () => {
 };
 
 const fetchslots=async()=>{
-    const response=await axiosInstance.get('/doctors/getslots')
-    console.log('dfugudgdsxfguu',response);
+    const response=await axiosInstance.get('/doctors/getslots') 
+    console.log("slots",response.data);
     
     return response.data
 }

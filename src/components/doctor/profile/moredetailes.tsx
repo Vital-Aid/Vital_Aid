@@ -4,37 +4,37 @@ import React, { useState } from "react";
 import { Box, Card, Typography, TextField, Button, Grid} from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
-
+import { DoctorDetails } from "./doctorProfile";
 import axiosInstance from "@/utils/axios";
 import axiosErrorManager from "@/utils/axiosErrormanager";
 import { Dayjs } from "dayjs";
 import { useDoctorSlots } from "@/lib/Query/hooks/useDoctorProfile";
 
-interface MoreDetailesProps {
-    onEdit: () => void;
-}
+
 
 export interface Appointment {
     _id: string;
     doctor: string;
-    date: string;
-    time: string;
-    place: string;
-    isDeleted: boolean;
+    startingTime: string;
+    endingTime: string;
     createdAt: string;
     updatedAt: string;
+    isDeleted: boolean;
     __v: number;
+  }
+interface MoreDetailsProps {
+    doctor: DoctorDetails;
 }
 
-const MoreDetailes: React.FC<MoreDetailesProps> = ({ onEdit }) => {
-    // State for form fields
-    const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
-    const [selectedTime, setSelectedTime] = useState<Dayjs | null>(null);
-    const [place, setPlace] = useState<string>("");
+const MoreDetailes: React.FC<MoreDetailsProps> = ({ doctor }) => {
+    
+   
+    const [selectedStartingTime, setSelectedStartingTime] = useState<Dayjs | null>(null);
+    const [selectedEndingTime, setSelectedEndingTimt] = useState<Dayjs | null>(null);
+    
 
-    // Fetch doctor slots
+    
     const { data,refetch } = useDoctorSlots();
     const slots: Appointment[] = data?.data || [];
 
@@ -42,9 +42,9 @@ const MoreDetailes: React.FC<MoreDetailesProps> = ({ onEdit }) => {
         event.preventDefault();
         
         const slotData = {
-            date: selectedDate?.format("DD-MM-YYYY"), 
-            time: selectedTime?.format("hh:mm A"),
-            place: place
+           startingTme: selectedStartingTime?.format("hh:mm A"), 
+            endingTime: selectedEndingTime?.format("hh:mm A"),
+            
         };
 
         try {
@@ -55,6 +55,7 @@ const MoreDetailes: React.FC<MoreDetailesProps> = ({ onEdit }) => {
             console.log(error);
         }
     };
+console.log('time:',doctor);
 
     return (
         <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -63,9 +64,9 @@ const MoreDetailes: React.FC<MoreDetailesProps> = ({ onEdit }) => {
                
                
 
-                {/* Display Slots */}
+              
                 <Typography variant="h5" sx={{ mb: 3, fontWeight: "bold", color: "green" }}>
-                    Available Slots
+                  { ` Available Slots at ${doctor?.availability}`}
                 </Typography>
 
                 <Grid container spacing={2}>
@@ -73,9 +74,8 @@ const MoreDetailes: React.FC<MoreDetailesProps> = ({ onEdit }) => {
                         slots.map((slot) => (
                             <Grid item xs={12} sm={4} key={slot._id}>
                                 <Card sx={{ p: 2, textAlign: "center", boxShadow: 2, borderRadius: 2 }}>
-                                    <Typography variant="body1"><b>Place:</b> {slot.place}</Typography>
-                                    <Typography variant="body1"><b>Date:</b> {slot.date}</Typography>
-                                    <Typography variant="body1"><b>Time:</b> {slot.time}</Typography>
+                                    <Typography variant="body1"><b>Place:</b> {doctor?.hospital}</Typography>
+                                    <Typography variant="body1"><b>Time:</b> {`${slot.startingTime}-${slot.endingTime}`}</Typography>
                                 </Card>
                             </Grid>
                         ))
@@ -92,33 +92,22 @@ const MoreDetailes: React.FC<MoreDetailesProps> = ({ onEdit }) => {
                 {/* Form */}
                 <form onSubmit={handleSubmit}>
                     <Grid container spacing={3} alignItems="center">
-                        {/* Date Picker */}
-                        <Grid item xs={12} sm={4}>
-                            <DatePicker
-                                label="Select Date"
-                                value={selectedDate}
-                                onChange={(newValue) => setSelectedDate(newValue)}
-                                slotProps={{ textField: { fullWidth: true } }}
-                            />
-                        </Grid>
-
+                       
                         {/* Time Picker */}
                         <Grid item xs={12} sm={4}>
                             <TimePicker
-                                label="Select Time"
-                                value={selectedTime}
-                                onChange={(newValue) => setSelectedTime(newValue)}
+                                label="Select starting Time"
+                                value={selectedStartingTime}
+                                onChange={(newValue) => setSelectedStartingTime(newValue)}
                                 slotProps={{ textField: { fullWidth: true } }}
                             />
                         </Grid>
-
-                        {/* Place Input */}
                         <Grid item xs={12} sm={4}>
-                            <TextField 
-                                fullWidth 
-                                label="Enter the Place" 
-                                value={place} 
-                                onChange={(e) => setPlace(e.target.value)}
+                            <TimePicker
+                                label="Select ending Time"
+                                value={selectedEndingTime}
+                                onChange={(newValue) => setSelectedEndingTimt(newValue)}
+                                slotProps={{ textField: { fullWidth: true } }}
                             />
                         </Grid>
 
