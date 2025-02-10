@@ -1,8 +1,9 @@
 import React, { JSX } from "react";
 import { Box, Step, StepLabel, Stepper, Typography } from "@mui/material";
 import WheelchairPickupIcon from '@mui/icons-material/WheelchairPickup';
-import { Place, CalendarToday} from "@mui/icons-material";
+import { Place} from "@mui/icons-material";
 import AssignmentOutlinedIcon from '@mui/icons-material/AssignmentOutlined';
+import { text } from "stream/consumers";
 
 interface StepType {
   label: string;
@@ -34,13 +35,13 @@ const HowItWorks: React.FC = () => {
         by eliminating financial burdens and providing timely assistance.
       </Typography>
     </Box>
-    <Box sx={{ width: "100%", textAlign: "center", py: 4,boxShadow:"0px 4px 10px rgba(0, 0, 0, 0.1) "}}>
+    <Box sx={{ width: "100%",  color: "black", textAlign: "center", py: 4,boxShadow:"0px 4px 10px rgba(0, 0, 0, 0.1) "}}>
       <Typography variant="h5" sx={{ mb: 3 }}>
         How it Works
       </Typography>
       <Stepper alternativeLabel>
         {steps.map((step, index) => (
-          <Step key={index}>
+          <Step key={index} sx={{ color: "black", "& .MuiStepLabel-label": { color: "black" } }}>
             <StepLabel icon={step.icon}>{step.label}</StepLabel>
           </Step>
         ))}
