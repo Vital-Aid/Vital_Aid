@@ -155,36 +155,34 @@ const DonorsList: React.FC = () => {
           Next
         </button>
       </div>
+      <footer className="bg-gray-100 w-full py-8 mt-12">
+  <div className="text-center">
+    <h2 className="text-2xl font-bold text-red-800">
+      How to Use This Donor List
+    </h2>
+    <p className="mt-4 text-lg text-gray-700">
+      This list features volunteers who are ready to help you in times of need. Here's how you can use this information:
+    </p>
+    <ul className="mt-4 text-lg text-gray-700 list-disc pl-8 inline-block text-left">
+      <li>
+        <strong>Browse Donors:</strong> Find volunteers by their blood group, and contact them directly for help.
+      </li>
+      <li>
+        <strong>Phone Numbers:</strong> You can easily reach out to donors via their provided phone number.
+      </li>
+      <li>
+        <strong>Urgent Requests:</strong> In case of urgent need, don’t hesitate to contact multiple donors.
+      </li>
+    </ul>
+  </div>
 
-      <div className="text-center mt-12">
-        <h2 className="text-2xl font-bold text-red-800">
-          How to Use This Donor List
-        </h2>
-        <p className="mt-4 text-lg text-gray-700">
-          This list features volunteers who are ready to help you in times of
-          need. Here's how you can use this information:
-        </p>
-        <ul className="mt-4 text-lg text-gray-700 list-disc pl-8">
-          <li>
-            <strong>Browse Donors:</strong> Find volunteers by their blood group,
-            and contact them directly for help.
-          </li>
-          <li>
-            <strong>Phone Numbers:</strong> You can easily reach out to donors
-            via their provided phone number.
-          </li>
-          <li>
-            <strong>Urgent Requests:</strong> In case of urgent need, don’t
-            hesitate to contact multiple donors.
-          </li>
-        </ul>
-      </div>
+  <div className="mt-6 text-center">
+    <p className="text-lg font-semibold text-gray-900">
+      Together, we can save lives! 💖
+    </p>
+  </div>
+</footer>
 
-      <div className="mt-8 text-center">
-        <p className="text-lg font-semibold text-gray-900">
-          Together, we can save lives! 💖
-        </p>
-      </div>
     </div>
   );
 };
