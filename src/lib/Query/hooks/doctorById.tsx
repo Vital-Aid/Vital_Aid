@@ -13,3 +13,10 @@ export const fetchDoctorById = async (id: string) => {
 
     return response.data.data[0]; 
 };
+
+export const useDoctorbyId = (id: string) => {
+    return useQuery({
+        queryKey: ["doctors", id],
+        queryFn: () => fetchDoctorById(id),
+    });
+};
