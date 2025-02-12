@@ -3,6 +3,7 @@ import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axiosInstance from "@/utils/axios";
 import Cookies from "js-cookie";
 import axiosErrorManager from "@/utils/axiosErrormanager";
+import toast from "react-hot-toast";
 
 interface UserState {
   user: {
@@ -33,6 +34,7 @@ interface userRegistrationdata {
 type LoginFulfilledType = { email: string; id: string; token: string, role: string, profileImage: { originalProfile: string, thumbnail: string }, phone: string, name: string };
 type LoginArgumentType = { email: string; password: string };
 type LoginRejectValueType = string;
+
 const storedUser = localStorage.getItem("userState");
 
 const initialState: UserState = storedUser ? JSON.parse(storedUser) : {
@@ -48,8 +50,8 @@ export const userRegistration = createAsyncThunk<void, userRegistrationdata, { r
   'user/userRegistration',
   async (registrationData, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.post("/api/auth/register", registrationData);
-      console.log('Registration successful:', response.data);
+      await axiosInstance.post("/auth/register", registrationData);
+      toast.success("registerd succesfully")
     } catch (error) {
       const errorMessage = axiosErrorManager(error);
       return rejectWithValue(errorMessage);
@@ -59,12 +61,12 @@ export const userRegistration = createAsyncThunk<void, userRegistrationdata, { r
 
 export const loginUser = createAsyncThunk<LoginFulfilledType, LoginArgumentType, { rejectValue: LoginRejectValueType }>("user/login", async (credentials, { rejectWithValue }) => {
   try {
-    console.log('hi2');
+    
     const response = await axiosInstance.post("/auth/userlogin", credentials, { withCredentials: true });
-    console.log(response);
+  
 
     const { data } = response;
-
+    toast.success("welcome to Vital Aid")
     return {
       name: data.user.name,
       email: data.user.email,
@@ -74,6 +76,7 @@ export const loginUser = createAsyncThunk<LoginFulfilledType, LoginArgumentType,
       profileImage: data.user.profileImage,
       phone: data.user.phone,
     };
+   
   } catch (error) {
     return rejectWithValue(
       axiosErrorManager(error)
@@ -88,7 +91,7 @@ export const loginDoctor = createAsyncThunk<LoginFulfilledType, LoginArgumentTyp
     console.log(response);
 
     const { data } = response;
-
+    toast.success("welcome doctor")
     return {
       name: data.user.name,
       email: data.user.email,
