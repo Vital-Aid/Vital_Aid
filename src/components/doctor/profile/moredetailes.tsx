@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Box, Card, Typography, TextField, Button, Grid} from "@mui/material";
+import { Card, Typography, Button, Grid} from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
@@ -9,7 +9,7 @@ import { DoctorDetails } from "./doctorProfile";
 import axiosInstance from "@/utils/axios";
 import axiosErrorManager from "@/utils/axiosErrormanager";
 import { Dayjs } from "dayjs";
-import { useDoctorSlots } from "@/lib/Query/hooks/useDoctorProfile";
+// import { useDoctorSlots } from "@/lib/Query/hooks/useDoctorProfile";
 
 
 
@@ -35,8 +35,8 @@ const MoreDetailes: React.FC<MoreDetailsProps> = ({ doctor }) => {
     
 
     
-    const { data,refetch } = useDoctorSlots();
-    const slots: Appointment[] = data?.data || [];
+    // const { data,refetch } = useDoctorSlots();
+    // const slots: Appointment[] = data?.data || [];
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
@@ -49,7 +49,7 @@ const MoreDetailes: React.FC<MoreDetailsProps> = ({ doctor }) => {
 
         try {
             await axiosInstance.post('/doctors/addslot', slotData);
-            refetch()
+            
         } catch (error) {
             axiosErrorManager(error);
             console.log(error);
@@ -60,11 +60,8 @@ console.log('time:',doctor);
     return (
         <LocalizationProvider dateAdapter={AdapterDayjs}>
             <Card sx={{ p: 4, boxShadow: 4, borderRadius: 3, mt: 4, width: "100%", maxWidth: "900px" }}>
-                
-               
-               
-
-              
+            
+{/*               
                 <Typography variant="h5" sx={{ mb: 3, fontWeight: "bold", color: "green" }}>
                   { ` Available Slots at ${doctor?.availability}`}
                 </Typography>
@@ -82,7 +79,7 @@ console.log('time:',doctor);
                     ) : (
                         <Typography variant="body1" sx={{ ml: 2, color: "gray" }}>No slots available.</Typography>
                     )}
-                </Grid>
+                </Grid> */}
 
                 {/* Add Slots Section */}
                 <Typography variant="h5" sx={{ mt: 4, mb: 3, fontWeight: "bold", color: "green" }}>

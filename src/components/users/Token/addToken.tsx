@@ -1,7 +1,8 @@
 
 
 "use client";
-import React, { useState } from "react";
+import { io } from "socket.io-client"
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Button,
@@ -41,7 +42,7 @@ export interface Token {
   tokenNumber: number;
 }
 
-
+const socket = io(process.env.PORT);
 const AddToken = () => {
   const { id } = useParams();
   const { data } = useDoctobyId(id as string);
@@ -76,11 +77,25 @@ const AddToken = () => {
 
   const datas = { date: selectedDate, tokenNumber: selectedSlot, doctorId: doctor?.doctor?._id }
 
-const handleSubmit=(datas:object)=>{
-  addToken(datas)
- 
-}
 
+  useEffect(() => {
+    socket.on("tokenUpdated", (newToken) => {
+      console.log("🔄 Token updated:", newToken);
+      refetch(); // Refresh token list
+
+    });
+
+    return () => {
+      socket.off("tokenUpdated");
+    };
+
+  }, [refetch]);
+  
+  const handleSubmit = (datas: object) => {
+    addToken(datas)
+    socket.emit("bookToken", datas);
+    refetch()
+  }
   return (
     <div className="w-screen mt-10">
       <Box
@@ -158,7 +173,7 @@ const handleSubmit=(datas:object)=>{
               color="blue"
               sx={{ cursor: "pointer", textDecoration: "underline" }}
             >
-              View Doctor's Profile &gt;&gt;
+              View Doctor&apos;s Profile &gt;&gt;
             </Typography>
           </Box>
         </Box>
@@ -173,7 +188,6 @@ const handleSubmit=(datas:object)=>{
             mt={5}
           >
             {slots.map((slot) => {
-              // Check if this slot is already booked for the selected date
               const isBooked = AllToken?.some(
                 (token) => token.date === selectedDate && token.tokenNumber === slot
               );
@@ -185,12 +199,11 @@ const handleSubmit=(datas:object)=>{
                   variant={selectedSlot === slot ? "contained" : "outlined"}
                   disabled={isBooked}
                   sx={{
-                    backgroundColor: isBooked
-                      ? "red"
-                      : selectedSlot === slot
-                        ? "green"
-                        : "#D4E6B5",
+                    backgroundColor: isBooked ? "red" : selectedSlot === slot ? "green" : "#D4E6B5",
                     color: isBooked ? "white" : selectedSlot === slot ? "white" : "black",
+                    "&.MuiButton-root": {
+                      color: isBooked ? "white" : selectedSlot === slot ? "white" : "black",
+                    },
                     borderRadius: 2,
                     textTransform: "none",
                     fontSize: isMobile ? "8px" : "10px",
@@ -205,6 +218,7 @@ const handleSubmit=(datas:object)=>{
                 >
                   {slot}
                 </Button>
+
               );
             })}
           </Box>
@@ -222,7 +236,7 @@ const handleSubmit=(datas:object)=>{
               fontSize: isMobile ? "12px" : "14px",
             }}
             disabled={!selectedSlot}
-            onClick={()=>handleSubmit(datas)}
+            onClick={() => handleSubmit(datas)}
           >
             Confirm
           </Button>
