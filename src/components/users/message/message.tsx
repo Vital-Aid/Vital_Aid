@@ -1,15 +1,14 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import io from "socket.io-client";
+import React, { useEffect, useState, useRef, useMemo, useCallback } from "react";
+
 import { useDoctorUser } from "@/lib/Query/hooks/useDocterUser";
 import { useAppSelector } from "@/lib/store/hooks";
 import axiosInstance from "@/utils/axios";
+import { initializeSocket,socket } from "@/lib/socket/socketinstanc";
 
-const socket = io("http://localhost:5000", {
-  transports: ["websocket"],
-  autoConnect: false,
-});
+
+
 
 interface Doctor {
   doctor: {
@@ -32,81 +31,88 @@ const Message = () => {
   const { doctors } = useDoctorUser();
   const { user } = useAppSelector((state) => state.auth);
 
-  const doctorsList: Doctor[] = React.useMemo(
-    () => (Array.isArray(doctors?.data?.data) ? doctors.data?.data : []),
+  const doctorsList: Doctor[] = useMemo(
+    () => (Array.isArray(doctors?.data?.data) ? doctors.data.data : []),
     [doctors]
   );
 
   const [search, setSearch] = useState("");
-  const [filteredDoctors, setFilteredDoctors] = useState(doctorsList);
-  const [selectedDoctor, setSelectedDoctor] = useState<Doctor["doctor"] | null>(
-    null
-  );
+  const [filteredDoctors, setFilteredDoctors] = useState<Doctor[]>(doctorsList);
+  const [selectedDoctor, setSelectedDoctor] = useState<Doctor["doctor"] | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState("");
+  const chatEndRef = useRef<HTMLDivElement>(null);
+
+  // Auto-scroll to the latest message
+  useEffect(() => {
+    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
+  // Filter doctors when search input changes
+  useEffect(() => {
+    setFilteredDoctors(
+      doctorsList.filter((d) =>
+        d?.doctor?.name.toLowerCase().includes(search.toLowerCase())
+      )
+    );
+  }, [search, doctorsList]);
 
   useEffect(() => {
-    socket.connect();
+    if (user?.id) {
+      const cleanup = initializeSocket(user.id, "User");
+      return () => {
+        cleanup();
+      };
+    }
+  }, [user?.id]);
 
-    socket.on("connect", () => {
-      console.log("Connected to server:", socket.id);
-    });
 
-    socket.on("receiveMessage", (msg: Message) => {
-      if (msg.receiverId === user?.id) {
+  useEffect(() => {
+    const handleReceiveMessage = (msg: Message) => {
+      if (msg.senderId === selectedDoctor?._id) {
         setMessages((prev) => [...prev, msg]);
       }
-    });
-
-    return () => {
-      socket.disconnect();
-      console.log("Socket disconnected");
     };
-  }, [user?.id]);
+
+    socket.on("receiveMessage", handleReceiveMessage);
+    return () => {
+      socket.off("receiveMessage", handleReceiveMessage);
+    };
+  }, [selectedDoctor]);
 
   useEffect(() => {
     if (selectedDoctor) {
       axiosInstance
         .get(`/users/messageof/${user?.id}/${selectedDoctor._id}`)
         .then((res) => setMessages(res.data.data))
-        
         .catch((err) => console.error("Error fetching chat:", err));
     }
   }, [selectedDoctor, user?.id]);
 
-  
-  useEffect(() => {
-    const filtered = doctorsList.filter((d) =>
-      d?.doctor?.name.toLowerCase().includes(search.toLowerCase())
-    );
-    setFilteredDoctors(filtered);
-  }, [search, doctorsList]);
 
- 
-  const sendMessage = async () => {
-    if (newMessage.trim() && selectedDoctor) {
-      const msgData: Message = {
-        senderId: user?.id || "",
-        senderModel: "User",
-        receiverId: selectedDoctor._id,
-        receiverModel: "Doctor",
-        message: newMessage,
-      };
+  const sendMessage = useCallback(async () => {
+    if (!newMessage.trim() || !selectedDoctor) return;
 
-      try {
-        await axiosInstance.post("/users/sendmsg", msgData);
-        socket.emit("sendMessage", msgData);
-        setMessages((prev) => [...prev, msgData]);
-        setNewMessage("");
-      } catch (err) {
-        console.error("Message send error:", err);
-      }
+    const msgData: Message = {
+      senderId: user?.id || "",
+      senderModel: "User",
+      receiverId: selectedDoctor._id,
+      receiverModel: "Doctor",
+      message: newMessage,
+    };
+
+    try {
+      await axiosInstance.post("/users/sendmsg", msgData);
+      socket.emit("sendMessage", msgData);
+      setNewMessage("");
+    } catch (err) {
+      console.error("Message send error:", err);
     }
-  };
+  }, [newMessage, selectedDoctor, user?.id]);
 
   return (
     <div className="flex h-screen">
-      {/* Sidebar - Doctor List */}
+      
       <div className="w-1/4 bg-gray-200 p-4">
         <h2 className="text-lg font-semibold mb-4">Doctors</h2>
         <input
@@ -133,11 +139,11 @@ const Message = () => {
         </ul>
       </div>
 
-      {/* Chat Window */}
+    
       <div className="w-3/4 flex flex-col">
         {selectedDoctor ? (
           <>
-            {/* Chat Header */}
+            
             <div className="bg-blue-500 text-white p-4">
               <h2 className="text-lg font-semibold">
                 Chat with {selectedDoctor.name}
@@ -146,7 +152,7 @@ const Message = () => {
 
             {/* Chat Messages */}
             <div className="flex-1 overflow-y-auto p-4 bg-gray-100">
-              {messages?.map((msg, index) => (
+              {messages.map((msg, index) => (
                 <div
                   key={index}
                   className={`p-2 mb-2 rounded-md ${
@@ -158,6 +164,7 @@ const Message = () => {
                   {msg.message}
                 </div>
               ))}
+              <div ref={chatEndRef} />
             </div>
 
             {/* Message Input */}
