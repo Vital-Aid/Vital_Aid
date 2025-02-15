@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Card, Typography, Button, Grid} from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -10,7 +10,8 @@ import axiosInstance from "@/utils/axios";
 import axiosErrorManager from "@/utils/axiosErrormanager";
 import { Dayjs } from "dayjs";
 // import { useDoctorSlots } from "@/lib/Query/hooks/useDoctorProfile";
-
+import { io } from "socket.io-client";
+import { Token } from "@/components/users/Token/addToken";
 
 
 export interface Appointment {
@@ -26,14 +27,33 @@ export interface Appointment {
 interface MoreDetailsProps {
     doctor: DoctorDetails;
 }
+const socket = io("http://localhost:5000"); // Ensure correct backend URL
 
 const MoreDetailes: React.FC<MoreDetailsProps> = ({ doctor }) => {
     
    
     const [selectedStartingTime, setSelectedStartingTime] = useState<Dayjs | null>(null);
     const [selectedEndingTime, setSelectedEndingTimt] = useState<Dayjs | null>(null);
+    const fetchToken=async()=>{
+        const response=await axiosInstance.get("/doctors/alltoken")
+        console.log('alltoken:',response.data.data);
+        return response.data.data
+    }
+    useEffect(() => {
+        fetchToken(); // Fetch initially
     
-
+        // Listen for real-time updates
+        const handleTokenUpdate = (newToken: Token) => {
+          console.log("⚡ Token updated:", newToken);
+          fetchToken(); // Refetch tokens when a new one is added
+        };
+    
+        socket.on("tokenUpdated", handleTokenUpdate);
+    
+        return () => {
+          socket.off("tokenUpdated", handleTokenUpdate); // Cleanup on unmount
+        };
+      }, []);
     
     // const { data,refetch } = useDoctorSlots();
     // const slots: Appointment[] = data?.data || [];

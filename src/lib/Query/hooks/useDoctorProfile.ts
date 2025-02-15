@@ -14,15 +14,15 @@ export const useDoctorProfile = () => {
     });
 };
 
-// const fetchslots=async(id:string)=>{
-//     const response=await axiosInstance.get(`/users/gettokenperday/${id}`) 
-//     console.log("slots",response.data);
+const fetchslots=async(id:string)=>{
+    const response=await axiosInstance.get(`/users/gettokenperday/${id}`) 
+    console.log("slots",response.data);
     
-//     return response.data
-// }
-// export const useDoctorSlots = (id:string) => {
-//     return useQuery({
-//         queryKey: ["doctorSlots",id],
-//         queryFn: () => fetchslots(id),
-//     });
-// };
+    return response.data
+}
+export const useDoctorSlots = (id:string) => {
+    return useQuery({
+        queryKey: ["doctorSlots",id],
+        queryFn: () => fetchslots(id),
+    });
+};

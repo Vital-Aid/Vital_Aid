@@ -14,8 +14,8 @@ import {
 import dayjs from "dayjs";
 import { useDoctobyId } from "@/lib/Query/hooks/useDocterUser";
 import { useParams } from "next/navigation";
-import { useDoctorSlots } from "@/lib/Query/hooks/useDoctorProfile";
-import { addToken, useAlltoken } from "@/lib/Query/hooks/addToken";
+import {useDoctorSlots} from '../../../lib/Query/hooks/useDoctorProfile'
+import { addToken, useAlltoken,  } from "@/lib/Query/hooks/addToken";
 
 interface DoctorInfo {
   email: string;
@@ -33,21 +33,29 @@ interface DoctorData {
   hospital: string;
   address: string;
 }
-export interface Token {
+interface Patient {
+  _id?: string;
+  email: string;
+  name: string;
+  phone: string;
+  profileImage:{originalProfile:string,thumbnail:string}
+}
+ export interface Token {
   _id: string;
-  patientId: string;
+  patientId: Patient;
   doctorId: string;
   date: string;
   status?: "pending" | "cancelled" | "Completed";
   tokenNumber: number;
 }
 
-const socket = io(process.env.PORT);
+const socket = io("http://localhost:5000"); 
+
 const AddToken = () => {
   const { id } = useParams();
   const { data } = useDoctobyId(id as string);
   const { data: totalToken } = useDoctorSlots(id as string);
-  const { data: allToken, refetch } = useAlltoken()
+  const { data: allToken, refetch } = useAlltoken(id as string)
 
 
   const theme = useTheme();
@@ -70,27 +78,32 @@ const AddToken = () => {
   }
 
   const handleDateClick = (day: number) => {
-    const formattedDate = today.date(day).format("DD/MM/YYYY");
+    const formattedDate = today.date(day).format("DD-MM-YYYY");
     setSelectedDate(formattedDate);
+    
+    
+    
   };
 
-
+  console.log('date',selectedDate);
   const datas = { date: selectedDate, tokenNumber: selectedSlot, doctorId: doctor?.doctor?._id }
 
 
   useEffect(() => {
-    socket.on("tokenUpdated", (newToken) => {
+    const handleTokenUpdate = (newToken: Token) => {
       console.log("🔄 Token updated:", newToken);
-      refetch(); // Refresh token list
-
-    });
-
-    return () => {
-      socket.off("tokenUpdated");
+      refetch();
     };
-
+  
+    socket.on("tokenUpdated", handleTokenUpdate);
+  
+    return () => {
+      socket.off("tokenUpdated", handleTokenUpdate);
+    };
   }, [refetch]);
   
+  
+
   const handleSubmit = (datas: object) => {
     addToken(datas)
     socket.emit("bookToken", datas);
@@ -135,8 +148,8 @@ const AddToken = () => {
                 justifyContent: "center",
                 borderRadius: 1,
                 cursor: "pointer",
-                backgroundColor: selectedDate === today.date(day).format("DD/MM/YYYY") ? "green" : "#A5B79B",
-                color: selectedDate === today.date(day).format("DD/MM/YYYY") ? "white" : "black",
+                backgroundColor: selectedDate === today.date(day).format("DD-MM-YYYY") ? "green" : "#A5B79B",
+                color: selectedDate === today.date(day).format("DD-MM-YYYY") ? "white" : "black",
                 transition: "0.3s",
               }}
             >
@@ -180,7 +193,7 @@ const AddToken = () => {
 
         {/* Available Slots */}
         <Box mt={2}>
-          <Typography fontWeight="bold" color="green">Available Slots</Typography>
+          <Typography fontWeight="bold" color="green">Available Tokens</Typography>
           <Box
             display="grid"
             gridTemplateColumns={isMobile ? "repeat(4, 1fr)" : "repeat(8, 1fr)"}
