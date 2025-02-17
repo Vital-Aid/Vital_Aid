@@ -22,9 +22,11 @@ import {
   Alert,
   Pagination,
   Chip,
+  TextField,
   Switch,
   FormControlLabel,
 } from "@mui/material";
+import toast from "react-hot-toast";
 
 function UsersList() {
   const dispatch = useAppDispatch();
@@ -45,6 +47,19 @@ function UsersList() {
       dispatch(fetchUsers(currentPage));
     } catch (error) {
       console.error("Error blocking/unblocking user:", error);
+    }
+  };
+
+  const [message, setMessage] = useState("");
+
+  const handleSendMessage = async () => {
+    try {
+      const response = await axiosInstance.post("/users/sendmessage", { message });
+      console.log(response.data);
+      setMessage(""); 
+      toast.success("message sent to users")
+    } catch (error) {
+      console.error("Error sending message", error);
     }
   };
 
@@ -86,6 +101,19 @@ function UsersList() {
       <Typography variant="h4" component="h2" align="center" gutterBottom>
         Users List
       </Typography>
+      <div className="flex justify-between">
+        <div className="flex">
+          <TextField
+            label="Enter a message"
+            name="name"
+            variant="outlined"
+            margin="dense"
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            
+          />
+          <Button onClick={handleSendMessage}>send</Button>
+        </div>
 
       <Box display="flex" justifyContent="space-between" mb={3}>
         <FormControlLabel
@@ -121,7 +149,7 @@ function UsersList() {
           <TableBody>
             {filteredUsers.map((user) => (
               <TableRow
-                key={user._id}
+                key={user?._id}
                 hover
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
