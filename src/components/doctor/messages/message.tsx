@@ -61,6 +61,15 @@ const DrMessage = () => {
   }, [doctor?.id]);
 
   useEffect(() => {
+    if (selectedUser && doctor?.id) {
+      axiosInstance
+        .get(`/users/messageof/${doctor.id}/${selectedUser._id}`)
+        .then((res) => setMessages(res.data.data))
+        .catch((err) => console.error("Error fetching chat:", err));
+    }
+  }, [selectedUser, doctor?.id]);
+  
+  useEffect(() => {
     const handleReceiveMessage = (msg: Message) => {
       if (
         msg.senderId === selectedUser?._id &&
@@ -77,14 +86,7 @@ const DrMessage = () => {
     };
   }, [selectedUser, receivedMsgs]);
 
-  useEffect(() => {
-    if (selectedUser && doctor?.id) {
-      axiosInstance
-        .get(`/users/messageof/${doctor.id}/${selectedUser._id}`)
-        .then((res) => setMessages(res.data.data))
-        .catch((err) => console.error("Error fetching chat:", err));
-    }
-  }, [selectedUser, doctor?.id]);
+ 
 
   useEffect(() => {
     const filtered = users.filter((u) =>
