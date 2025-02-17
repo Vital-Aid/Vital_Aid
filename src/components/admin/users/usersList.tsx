@@ -18,11 +18,12 @@ import {
   TableRow,
   Typography,
   Box,
- 
   CircularProgress,
   Alert,
   Pagination,
   Chip,
+  Switch,
+  FormControlLabel,
 } from "@mui/material";
 
 function UsersList() {
@@ -31,6 +32,7 @@ function UsersList() {
     (state) => state.users
   );
   const [currentPage, setCurrentPage] = useState(1);
+  const [showBlocked, setShowBlocked] = useState(false);
 
   useEffect(() => {
     dispatch(fetchUsers(currentPage));
@@ -52,6 +54,11 @@ function UsersList() {
   ) => {
     setCurrentPage(page);
   };
+
+  // Filter users based on the switch state
+  const filteredUsers = showBlocked
+    ? users.filter((user) => user.isDeleted || user.blocked)
+    : users;
 
   if (isLoading) {
     return (
@@ -80,7 +87,18 @@ function UsersList() {
         Users List
       </Typography>
 
-      <Box display="flex" justifyContent="flex-end" mb={3}>
+      <Box display="flex" justifyContent="space-between" mb={3}>
+        <FormControlLabel
+          control={
+            <Switch
+              checked={showBlocked}
+              onChange={() => setShowBlocked(!showBlocked)}
+              color="primary"
+            />
+          }
+          label="Show Blocked Users"
+        />
+
         <Link href="/admin/blockedList" passHref>
           <Button variant="outlined" color="error">
             Blocked Users
@@ -101,22 +119,24 @@ function UsersList() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {users.map((user) => (
+            {filteredUsers.map((user) => (
               <TableRow
                 key={user._id}
                 hover
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
                 <TableCell align="center">
+                <Link key={user._id} href={`/admin/usersList/${user?._id}`}>
                   <Box display="flex" justifyContent="center">
                     <Image
-                      src={user.profileImage.thumbnail || "/default-avatar.png"}
+                      src={user?.profileImage?.thumbnail || "/default-avatar.png"}
                       width={40}
                       height={40}
-                      alt={user.name}
+                      alt={user?.name || "User"}
                       style={{ borderRadius: "50%", objectFit: "cover" }}
                     />
                   </Box>
+                  </Link>
                 </TableCell>
                 <TableCell align="center">{user.name}</TableCell>
                 <TableCell align="center">{user.email}</TableCell>
@@ -143,9 +163,7 @@ function UsersList() {
                     variant="contained"
                     color={user.blocked ? "primary" : "error"}
                     onClick={() => handleBlockUser(user._id)}
-                    startIcon={
-                      user.blocked ? <CheckCircleIcon /> : <BlockIcon />
-                    }
+                    startIcon={user.blocked ? <CheckCircleIcon /> : <BlockIcon />}
                     size="small"
                   >
                     {user.blocked ? "Unblock" : "Block"}
