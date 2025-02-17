@@ -176,7 +176,6 @@ const Message = () => {
             <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
           </div>
         </div>
-
         <div className="flex-1 overflow-y-auto p-3 scrollbar-none">
           {filteredDoctors.length > 0 ? (
             <ul className="space-y-2">

@@ -29,6 +29,7 @@ type Report = {
   User: string;
   report: string;
   healthstatus: string;
+  healthstatus: string;
   createdAt: string;
   updatedAt: string;
   __v: number;
@@ -130,6 +131,9 @@ const Home = () => {
           <h3 className="font-bold text-green-600 mt-4 text-center">
             Quick Actions
           </h3>
+          <h3 className="font-bold text-green-600 mt-4 text-center">
+            Quick Actions
+          </h3>
           <div className="space-y-3 mt-4">
             <Button
               onClick={() => Router.push("/user/bloodDonors")}
@@ -168,6 +172,8 @@ const Home = () => {
               variant="contained"
               className="w-full flex items-center gap-3 bg-purple-500 hover:bg-blue-600 text-white py-2"
             >
+              <VolunteerActivismIcon />
+              our volunteers
               <VolunteerActivismIcon />
               our volunteers
             </Button>
@@ -349,6 +355,11 @@ const Home = () => {
                     <h3 className="text-lg font-semibold">appoiment history</h3>
                   }
                 />
+                <Button
+                  variant="text"
+                  color="primary"
+                  onClick={() => Router.push("/user/doctors")}
+                >
                 <Button
                   variant="text"
                   color="primary"
