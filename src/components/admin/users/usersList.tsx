@@ -54,10 +54,12 @@ function UsersList() {
 
   const handleSendMessage = async () => {
     try {
-      const response = await axiosInstance.post("/users/sendmessage", { message });
+      const response = await axiosInstance.post("/users/sendmessage", {
+        message,
+      });
       console.log(response.data);
-      setMessage(""); 
-      toast.success("message sent to users")
+      setMessage("");
+      toast.success("message sent to users");
     } catch (error) {
       console.error("Error sending message", error);
     }
@@ -110,11 +112,10 @@ function UsersList() {
             margin="dense"
             value={message}
             onChange={(e) => setMessage(e.target.value)}
-            
           />
           <Button onClick={handleSendMessage}>send</Button>
         </div>
-
+      </div>
       <Box display="flex" justifyContent="space-between" mb={3}>
         <FormControlLabel
           control={
@@ -154,17 +155,15 @@ function UsersList() {
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
                 <TableCell align="center">
-                <Link key={user._id} href={`/admin/usersList/${user?._id}`}>
                   <Box display="flex" justifyContent="center">
                     <Image
-                      src={user?.profileImage?.thumbnail || "/default-avatar.png"}
+                      src={user.profileImage.thumbnail || "/default-avatar.png"}
                       width={40}
                       height={40}
-                      alt={user?.name || "User"}
+                      alt={user.name}
                       style={{ borderRadius: "50%", objectFit: "cover" }}
                     />
                   </Box>
-                  </Link>
                 </TableCell>
                 <TableCell align="center">{user.name}</TableCell>
                 <TableCell align="center">{user.email}</TableCell>
@@ -191,7 +190,9 @@ function UsersList() {
                     variant="contained"
                     color={user.blocked ? "primary" : "error"}
                     onClick={() => handleBlockUser(user._id)}
-                    startIcon={user.blocked ? <CheckCircleIcon /> : <BlockIcon />}
+                    startIcon={
+                      user.blocked ? <CheckCircleIcon /> : <BlockIcon />
+                    }
                     size="small"
                   >
                     {user.blocked ? "Unblock" : "Block"}
