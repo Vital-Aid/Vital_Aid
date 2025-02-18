@@ -1,6 +1,7 @@
 "use client";
 import { useQuery } from "@tanstack/react-query";
 import axiosInstance from "@/utils/axios";
+import axiosErrorManager from "@/utils/axiosErrormanager";
 
 const fetchReports = async (id: string) => {
   const response = await axiosInstance.get(`/users/getreportof/${id}`);
@@ -17,15 +18,30 @@ export function useFetchreport(id: string) {
 }
 
 const fetchDetails = async (id: string) => {
-  const response = await axiosInstance.get(`/users/getdetails/${id}`);
-  return response.data;
+  try {
+    const response = await axiosInstance.get(`/users/getdetails/${id}`);
+    console.log(response);
+
+    return response.data;
+  } catch (error) {
+    axiosErrorManager(error);
+    throw new Error("Failed to fetch user details");
+  }
 };
 
 export function useFetchDetails(id: string) {
-  const { data: details = [] } = useQuery({
+  const {
+    data: details = [],
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
     queryKey: ["details", id],
     queryFn: () => fetchDetails(id),
     enabled: !!id,
+    staleTime: 5 * 60 * 1000,
+    retry: 2,
   });
-  return { details };
+
+  return { details, isLoading, isError, error };
 }

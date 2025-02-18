@@ -23,6 +23,7 @@ import { useAppSelector } from "@/lib/store/hooks";
 import { useRouter } from "next/navigation";
 import { useFetchreport, useFetchDetails } from "@/lib/Query/hooks/useReport";
 import { useFetchMessages } from "@/lib/Query/hooks/useMessage";
+import { useGetTokenForUser } from "@/lib/Query/hooks/addToken";
 
 type Report = {
   _id: string;
@@ -40,8 +41,7 @@ type editDatas = {
   bloodgroup: string;
   occupation: string;
   address: string;
-  profileImage:string;
-
+  profileImage: string;
 };
 type Message = {
   _id: string;
@@ -53,29 +53,30 @@ const Home = () => {
   const [selectedReport, setSelectedReport] = useState<Report | null>(null);
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
-  console.log("img",imageUrl);
-  
+
   const Router = useRouter();
   const [isEditing, setIsEditing] = useState(false);
   const { details } = useFetchDetails(user?.id ?? "");
+  console.log(details);
+  
   const { reports } = useFetchreport(user?.id ?? "");
   const { messages } = useFetchMessages();
+  const { tokens } = useGetTokenForUser();
+  
 
   const [editData, setEditData] = useState<editDatas>({
-    age: details[0]?.age,
-    gender: details[0]?.gender,
-    bloodgroup: details[0]?.bloodgroup,
-    occupation: details[0]?.occupation,
-    address: details[0]?.address,
-    profileImage:""
+    age: details?.age,
+    gender: details?.gender,
+    bloodgroup: details?.bloodgroup,
+    occupation: details?.occupation,
+    address: details?.address,
+    profileImage: "",
   });
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
 
     if (file) {
-  
       try {
-
         const response = await axiosInstance.get(`/auth/generate-signed-url`, {
           params: { fileType: file.type },
         });
@@ -92,15 +93,13 @@ const Home = () => {
         await setImageUrl(newImageUrl);
         setEditData((prev) => ({
           ...prev,
-          profileImage: newImageUrl
-        }))
-
+          profileImage: newImageUrl,
+        }));
       } catch (error) {
         console.error("Error uploading image:", error);
       }
     }
   };
-
 
   const handleReportClick = (report: Report) => {
     setSelectedReport(report);
@@ -113,8 +112,15 @@ const Home = () => {
 
   const handleSave = async () => {
     try {
-      await axiosInstance.post(`/users/addDetails/${user?.id}`, editData);
-      setIsEditing(false);
+      if(details){
+        await axiosInstance.put(`/users/editdetailsofthe`,editData)
+        setIsEditing(false)
+      }else{
+        await axiosInstance.post(`/users/addDetails/${user?.id}`, editData);
+        setIsEditing(false);
+      }
+      
+      
     } catch (error) {
       console.error(error);
     }
@@ -127,7 +133,7 @@ const Home = () => {
           <h2 className="text-xl font-bold text-gray-800 text-center">
             Welcome, {user?.name}
           </h2>
-         
+
           <h3 className="font-bold text-green-600 mt-4 text-center">
             Quick Actions
           </h3>
@@ -169,7 +175,6 @@ const Home = () => {
               variant="contained"
               className="w-full flex items-center gap-3 bg-purple-500 hover:bg-blue-600 text-white py-2"
             >
-              
               <VolunteerActivismIcon />
               our volunteers
             </Button>
@@ -189,7 +194,7 @@ const Home = () => {
               <Avatar className="h-40 w-40 shadow-lg relative">
                 <Image
                   src={
-                     // Show selected image preview
+                    // Show selected image preview
                     user?.profileImage?.originalProfile ||
                     "https://i.pinimg.com/736x/ed/fe/67/edfe6702e44cfd7715a92390c7d8a418.jpg"
                   }
@@ -297,48 +302,56 @@ const Home = () => {
                 <Button
                   variant="text"
                   color="primary"
+                  className="h-7"
                   onClick={() => setIsModalOpen(true)}
                 >
                   + Add report
                 </Button>
               </div>
-              <CardContent className="space-y-2">
+              <CardContent className="space-y-4 max-h-32 overflow-y-auto scrollbar-none">
                 {reports.length > 0 ? (
-                  reports.map((reportItem: Report) => {
-                    return (
-                      reportItem.healthstatus && (
-                        <div
-                          key={reportItem._id}
-                          className={`h-auto min-h-10 rounded p-2 shadow-sm cursor-pointer ${
-                            reportItem.healthstatus === " 🟢 "
-                              ? "bg-green-100 hover:bg-green-200"
-                              : reportItem.healthstatus === " 🟡 "
-                              ? "bg-yellow-300 hover:bg-yellow-200"
-                              : reportItem.healthstatus === " 🔴 "
-                              ? "bg-red-100 hover:bg-red-200"
-                              : reportItem.healthstatus === " ⚠️ "
-                              ? "bg-red-500 hover:bg-red-400"
-                              : "bg-gray-100"
-                          }`}
-                          onClick={() => handleReportClick(reportItem)}
-                        >
-                          <div className="flex justify-between items-center">
-                            <div className="truncate">
-                              {"Report of " +
-                                new Date(
+                  reports
+                    .slice() 
+                    .sort(
+                      (a: Report, b: Report) =>
+                        new Date(b.createdAt).getTime() -
+                        new Date(a.createdAt).getTime()
+                    )
+                    .map((reportItem: Report) => {
+                      return (
+                        reportItem.healthstatus && (
+                          <div
+                            key={reportItem._id}
+                            className={`h-auto min-h-10 rounded p-2 shadow-sm cursor-pointer hover:shadow-md ${
+                              reportItem.healthstatus === " 🟢 "
+                                ? "bg-green-100 hover:bg-green-200"
+                                : reportItem.healthstatus === " 🟡 "
+                                ? "bg-yellow-300 hover:bg-yellow-200"
+                                : reportItem.healthstatus === " 🔴 "
+                                ? "bg-red-100 hover:bg-red-200"
+                                : reportItem.healthstatus === " ⚠️ "
+                                ? "bg-red-500 hover:bg-red-400"
+                                : "bg-gray-100"
+                            }`}
+                            onClick={() => handleReportClick(reportItem)}
+                          >
+                            <div className="flex justify-between items-center">
+                              <div className="truncate">
+                                {"Report of " +
+                                  new Date(
+                                    reportItem.createdAt
+                                  ).toLocaleDateString()}
+                              </div>
+                              <div className="text-xs text-gray-500">
+                                {new Date(
                                   reportItem.createdAt
                                 ).toLocaleDateString()}
-                            </div>
-                            <div className="text-xs text-gray-500">
-                              {new Date(
-                                reportItem.createdAt
-                              ).toLocaleDateString()}
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      )
-                    );
-                  })
+                        )
+                      );
+                    })
                 ) : (
                   <p className="text-gray-500 text-sm">No reports available</p>
                 )}
@@ -351,23 +364,40 @@ const Home = () => {
                     <h3 className="text-lg font-semibold">appoiment history</h3>
                   }
                 />
-                
+
                 <Button
                   variant="text"
                   color="primary"
+                  className="h-7"
                   onClick={() => Router.push("/user/doctors")}
                 >
                   + Add Appointment
                 </Button>
               </div>
 
-              <CardContent className="space-y-4">
-                <div className="p-4 bg-gray-50 rounded-lg shadow-sm">
-                  View with doctor
-                </div>
-                <div className="p-4 bg-gray-50 rounded-lg shadow-sm">
-                  View with doctor
-                </div>
+              <CardContent className="space-y-4 max-h-32 overflow-y-auto scrollbar-none">
+                {tokens.length === 0 ? (
+                  <p className="text-gray-500">
+                    Appointments not scheduled. Book one now!
+                  </p>
+                ) : (
+                  tokens
+                 .map(
+                    (appoinment: {
+                      _id: string;
+                      doctorId: { name: string };
+                      date: string;
+                    }) => (
+                      <div
+                        key={appoinment._id}
+                        className="h-10 p-2 bg-gray-50 rounded shadow-sm text-xs md:text-base hover:cursor-pointer hover:bg-green-50 hover:shadow-md "
+                      >
+                        Appointment with {appoinment?.doctorId?.name} on{" "}
+                        {appoinment.date}
+                      </div>
+                    )
+                  )
+                )}
               </CardContent>
             </Card>
           </div>
