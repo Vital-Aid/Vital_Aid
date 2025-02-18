@@ -93,10 +93,15 @@ const AddToken = () => {
     };
   }, [refetch]);
 
-  const handleSubmit = (datas: object) => {
-    addToken(datas);
+  const handleSubmit = async(datas: object,) => {
+    try {
+     await addToken(datas);
     socket.emit("bookToken", datas);
-    refetch();
+    refetch()
+    } catch (error) {
+      console.log(error);
+      
+    }
   };
 
   return (

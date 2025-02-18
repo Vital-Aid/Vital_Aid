@@ -40,9 +40,7 @@ console.log("dataas:",data);
                 }}
             >
                 <Typography variant="h6" color="primary" fontWeight="bold" mb={2} textAlign="center">
-                    {date?.format("DD-MM-YYYY") === today.format("DD-MM-YYYY")
-                        ? `Today's Waiting Appointments`
-                        : 'Appointments by Date'}
+                    My Appointments
                 </Typography>
 
                 {/* Date Picker */}

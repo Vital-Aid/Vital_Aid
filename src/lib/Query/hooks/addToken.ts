@@ -48,7 +48,7 @@ export const addToken = async (datas: object) => {
     try {
         await axiosInstance.post("/users/createtoken", datas)
         toast.success('appointment created successfully')
-
+        
     } catch (error) {
         axiosErrorManager(error)
         console.log("error:", error);
