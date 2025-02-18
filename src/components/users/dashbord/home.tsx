@@ -127,9 +127,7 @@ const Home = () => {
           <h2 className="text-xl font-bold text-gray-800 text-center">
             Welcome, {user?.name}
           </h2>
-          <h3 className="font-bold text-green-600 mt-4 text-center">
-            Quick Actions
-          </h3>
+         
           <h3 className="font-bold text-green-600 mt-4 text-center">
             Quick Actions
           </h3>
@@ -171,8 +169,7 @@ const Home = () => {
               variant="contained"
               className="w-full flex items-center gap-3 bg-purple-500 hover:bg-blue-600 text-white py-2"
             >
-              <VolunteerActivismIcon />
-              our volunteers
+              
               <VolunteerActivismIcon />
               our volunteers
             </Button>
@@ -386,7 +383,7 @@ const Home = () => {
                 messages.map((msgs: Message) => (
                   <div
                     key={msgs._id}
-                    className="h-10 p-2 bg-gray-50 rounded shadow-sm"
+                    className="h-10 p-2 bg-gray-50  rounded shadow-sm text-xs md:text-base"
                   >
                     {msgs.message}
                   </div>
