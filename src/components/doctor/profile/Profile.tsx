@@ -7,6 +7,7 @@ import { useDoctorProfile } from "@/lib/Query/hooks/useDoctorProfile";
 import MoreDetailes from "./moredetailes";
 import DoctorProfile, { DoctorDetails } from "./doctorProfile";
 
+
 const Profile = () => {
   const { data } = useDoctorProfile();
   const doctor: DoctorDetails = data?.data;
