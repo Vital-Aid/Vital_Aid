@@ -106,7 +106,7 @@ export default function Navbar() {
           href="/user/donationHome" 
           className="bg-lime-700 text-white py-2 px-4 rounded h-10 lg:w-auto">
             Donate now
-          </Button>
+          </Link>
           <button onClick={()=>Route.push("/user/message")} className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition w-full lg:w-auto">
             <IoChatbubblesOutline size={20} />
           </button>

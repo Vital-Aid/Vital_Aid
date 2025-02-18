@@ -155,15 +155,20 @@ function UsersList() {
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
                 <TableCell align="center">
+                <Link href={`/admin/usersList/${user?._id}`}>
+
                   <Box display="flex" justifyContent="center">
                     <Image
-                      src={user.profileImage.thumbnail || "/default-avatar.png"}
+                      src={user.profileImage?.thumbnail || "/default-avatar.png"}
                       width={40}
                       height={40}
                       alt={user.name}
                       style={{ borderRadius: "50%", objectFit: "cover" }}
                     />
+                    
                   </Box>
+                  </Link>
+
                 </TableCell>
                 <TableCell align="center">{user.name}</TableCell>
                 <TableCell align="center">{user.email}</TableCell>
