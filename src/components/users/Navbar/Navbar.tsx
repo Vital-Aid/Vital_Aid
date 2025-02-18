@@ -4,8 +4,6 @@ import { Button } from "@mui/material";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-import { useRouter } from "next/navigation";
-
 import React, { useState } from "react";
 import { FaUser, FaBell } from "react-icons/fa";
 import { HiMenu, HiX } from "react-icons/hi";
@@ -105,10 +103,12 @@ export default function Navbar() {
 
         <div className="hidden lg:flex lg:items-center space-x-4">
           <Link 
-          href="/user/donationHome" 
-          className="bg-lime-700 text-white py-2 px-4 rounded h-10 lg:w-auto">
+          href="/user/donationHome">
+          <Button
+            className="bg-lime-700 text-white py-2 px-4 rounded h-10 lg:w-auto">
             Donate now
           </Button>
+          </Link>
           <button onClick={()=>Route.push("/user/message")} className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition w-full lg:w-auto">
             <IoChatbubblesOutline size={20} />
           </button>

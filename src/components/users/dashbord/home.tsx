@@ -29,7 +29,6 @@ type Report = {
   User: string;
   report: string;
   healthstatus: string;
-  healthstatus: string;
   createdAt: string;
   updatedAt: string;
   __v: number;
@@ -355,11 +354,7 @@ const Home = () => {
                     <h3 className="text-lg font-semibold">appoiment history</h3>
                   }
                 />
-                <Button
-                  variant="text"
-                  color="primary"
-                  onClick={() => Router.push("/user/doctors")}
-                >
+                
                 <Button
                   variant="text"
                   color="primary"
