@@ -123,23 +123,26 @@ export const cancellToken = async (
         axiosErrorManager(error);
     }
 };
-const getTokensForUsers = async () => {
+
+
+const getTokensForUsers = async (id: string) => {
     try {
-        const response = await axiosInstance.get("/users/getalltokenofuser");
-        return response.data.data;
+        const response = await axiosInstance.get(`/users/getalltokenofuser/${id}`);
+        return response?.data?.data || []; 
     } catch (error) {
         axiosErrorManager(error);
+        return [];
     }
 };
 
-export const useGetTokenForUser = () => {
+export const useGetTokenForUser = (id: string) => {
     const {
-        data: tokens = [],
+        data: tokens = [], 
         isLoading,
         error,
     } = useQuery({
-        queryKey: ["allTokenUser"],
-        queryFn: getTokensForUsers,
+        queryKey: ["allTokenUser", id],
+        queryFn: () => getTokensForUsers(id),
         staleTime: 5 * 60 * 1000,
         retry: 2,
     });
