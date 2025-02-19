@@ -119,3 +119,15 @@ export const cancellToken = async (id: string, status: string,refetch: () => voi
 
     }
 }
+
+
+export const updateTokenNumber=async(tokenperday:number,refetch:()=>void)=>{
+    try {
+        await axiosInstance.put('/doctors/updatetokennumber',{tokenperday:tokenperday})
+        refetch()
+    } catch (error) {
+        console.log(error);
+        axiosErrorManager(error)
+        
+    }
+}
