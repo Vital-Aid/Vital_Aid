@@ -22,11 +22,19 @@ const AllTokens = () => {
 
 
   useEffect(() => {
-    const handleTokenUpdate = () => refetch();
+    const handleTokenUpdate = () => {
+      console.log("Received tokenUpdated or otpVerified event");
+      refetch();
+    };
+  
     socket.on("tokenUpdated", handleTokenUpdate);
-    return () => socket.off("tokenUpdated", handleTokenUpdate);
+    socket.on("otpVerified", handleTokenUpdate);
+  
+    return () => {
+      socket.off("tokenUpdated", handleTokenUpdate);
+      socket.off("otpVerified", handleTokenUpdate);
+    };
   }, [refetch]);
-
   const tokens: Token[] = data?.data || [];
 
   return (

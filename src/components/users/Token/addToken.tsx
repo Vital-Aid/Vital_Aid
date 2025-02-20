@@ -15,6 +15,7 @@ import { useParams } from "next/navigation";
 import { useDoctorSlots } from "../../../lib/Query/hooks/useDoctorProfile";
 import { addToken, useAlltoken } from "@/lib/Query/hooks/addToken";
 import { socket } from "@/lib/socket/socketinstanc";
+import OTPVerification from "./otpverification";
 
 interface DoctorInfo {
   email: string;
@@ -63,6 +64,7 @@ const AddToken = () => {
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const days = Array.from({ length: daysInMonth }, (_, i) => i + 1);
   const [selectedSlot, setSelectedSlot] = useState<number | null>(null);
+  const[open,setOpen]=useState<boolean>(false)
 
   const doctor: DoctorData = data?.data[0];
   const totalslots = totalToken?.data?.tokenPerDay;
@@ -86,16 +88,18 @@ const AddToken = () => {
       refetch();
     };
 
-    socket.on("tokenUpdated", handleTokenUpdate);
-
+    socket.on("tokenUpdated", handleTokenUpdate)
+    socket.on("otpVerified", handleTokenUpdate)
     return () => {
-      socket.off("tokenUpdated", handleTokenUpdate);
+      socket.off("tokenUpdated", handleTokenUpdate)
+      socket.off("otpVerified", handleTokenUpdate)
     };
   }, [refetch]);
 
   const handleSubmit = async(datas: object,) => {
     try {
      await addToken(datas);
+     setOpen(true)
     socket.emit("bookToken", datas);
     refetch()
     } catch (error) {
@@ -103,7 +107,9 @@ const AddToken = () => {
       
     }
   };
-
+  const handleClose=()=>{
+    setOpen(false)
+  }
   return (
     <div className="w-screen mt-10">
       <Box
@@ -250,6 +256,7 @@ const AddToken = () => {
           </Button>
         </Box>
       </Box>
+      <OTPVerification open={open} onClose={handleClose} id={id as string}/>
     </div>
   );
 };

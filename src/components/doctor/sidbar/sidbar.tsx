@@ -15,7 +15,7 @@ export default function Sidebar({ sidebarOpen, toggleSidebar }: SidebarProps) {
   const pathname = usePathname();
   const isSmallScreen = useMediaQuery("(max-width: 768px)");
 
-  // Hide sidebar when navigating to Messages page
+  
   const showSidebar = pathname !== "/doctor/message";
 
   useEffect(() => {

@@ -28,6 +28,7 @@ export interface TokenType {
     date: string;
     tokenNumber: number;
     status: string;
+    isVerified:true
 }
 
 
@@ -46,9 +47,7 @@ export const useAlltoken = (id: string) => {
 export const addToken = async (datas: object) => {
     console.log("datas", datas);
     try {
-        await axiosInstance.post("/users/createtoken", datas)
-        toast.success('appointment created successfully')
-        
+        await axiosInstance.post("/users/createtoken", datas)   
     } catch (error) {
         axiosErrorManager(error)
         console.log("error:", error);
