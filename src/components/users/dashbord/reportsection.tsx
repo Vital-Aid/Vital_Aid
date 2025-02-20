@@ -5,6 +5,7 @@ import { useAppSelector } from "@/lib/store/hooks";
 import { Button, Card, CardContent } from "@mui/material";
 import React, { useState } from "react";
 import MedicalServicesIcon from "@mui/icons-material/MedicalServices";
+import { MdRefresh } from "react-icons/md";
 type Report = {
   _id: string;
   User: string;
@@ -20,7 +21,7 @@ function Reportsection() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedReport, setSelectedReport] = useState<Report | null>(null);
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
-  const { reports } = useFetchreport(user?.id ?? "");
+  const { reports,refetch } = useFetchreport(user?.id ?? "");
 
   const handleReportClick = (report: Report) => {
     setSelectedReport(report);
@@ -46,18 +47,24 @@ function Reportsection() {
     <>
       <Card className="shadow-lg rounded-xl overflow-hidden border-t-4 border-teal-400">
         <div className="flex justify-between items-center px-6 py-4 bg-gradient-to-r from-teal-50 to-white">
-          <h3 className="text-lg font-semibold text-gray-500 flex items-center">
-            <MedicalServicesIcon className="mr-2" fontSize="small" />
-            Medical Report
-          </h3>
-          <Button
-            variant="outlined"
-            color="success"
-            size="small"
-            onClick={() => setIsModalOpen(true)}
-          >
-            + Add Report
-          </Button>
+          <div className="flex justify-start">
+            <h3 className="text-lg font-semibold text-gray-500 flex items-center">
+              <MedicalServicesIcon className="mr-2" fontSize="small" />
+              Medical Report
+              
+            </h3>
+          </div>
+          <div className="flex justify-end gap-2">
+            <Button
+              variant="outlined"
+              color="success"
+              size="small"
+              onClick={() => setIsModalOpen(true)}
+            >
+              + Add Report
+            </Button>
+            <MdRefresh  size={29} className="text-teal-500" onClick={()=>refetch()}/>
+          </div>
         </div>
         <CardContent className="space-y-3 max-h-48 overflow-y-auto scrollbar-none p-4">
           {reports.length > 0 ? (

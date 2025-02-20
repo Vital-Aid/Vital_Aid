@@ -5,21 +5,27 @@ import { useRouter } from "next/navigation";
 import { useGetTokenForUser } from "@/lib/Query/hooks/addToken";
 import { useAppSelector } from "@/lib/store/hooks";
 import EventIcon from "@mui/icons-material/Event";
+import { MdRefresh } from "react-icons/md";
 
 function Appoinmentsctn() {
   const Router = useRouter();
 
   const { user } = useAppSelector((state) => state.auth);
-  const { tokens } = useGetTokenForUser(user?.id ?? "");
+  const { tokens ,refetch} = useGetTokenForUser(user?.id ?? "");
+  console.log(tokens);
+  
   return (
     <>
       <Card className="shadow-lg rounded-xl overflow-hidden border-t-4 border-teal-400">
         <div className="flex justify-between items-center px-6 py-4 bg-gradient-to-r from-teal-50 to-white">
+          <div className="flex justify-start">
           <h3 className="text-lg font-semibold text-gray-500 flex items-center">
             <FaStethoscope className="mr-2 h-4 w-4" />
             Appointment History
           </h3>
-          <Button
+          </div>
+         <div className="flex justify-end gap-2">
+         <Button
             variant="outlined"
             color="success"
             size="small"
@@ -27,6 +33,9 @@ function Appoinmentsctn() {
           >
             + New Appointment
           </Button>
+          <MdRefresh  size={29} className="text-teal-500" onClick={()=>refetch()}/>
+         </div>
+          
         </div>
 
         <CardContent className="space-y-3 max-h-48 overflow-y-auto scrollbar-none p-4">
@@ -51,15 +60,15 @@ function Appoinmentsctn() {
             tokens.map(
               (appointment: {
                 _id: string;
-                doctorId: { name: string };
+                doctorId: { name: string ,_id: string};
                 date: string;
               }) => (
                 <div
                   key={appointment._id}
                   className="p-3 bg-gradient-to-r from-green-50 to-white rounded-lg shadow-sm hover:shadow-md transition-all border-l-4 border-teal-400"
                 >
-                  <div className="flex justify-between items-center">
-                    <div className="font-medium">
+                  <div className="flex justify-between items-center cursor-pointer" onClick={()=>Router.push(`/user/doctors/doctor/${appointment?.doctorId?._id}`)}>
+                    <div className="font-medium" >
                       Dr. {appointment?.doctorId?.name}
                     </div>
                     <Chip

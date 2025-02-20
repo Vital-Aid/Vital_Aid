@@ -3,7 +3,7 @@ import { useFetchDetails } from "@/lib/Query/hooks/useReport";
 import { useAppSelector } from "@/lib/store/hooks";
 import axiosInstance from "@/utils/axios";
 import axiosErrorManager from "@/utils/axiosErrormanager";
-import { Button, Card, Chip, Input } from "@mui/material";
+import { Button, Card, Chip, Input, MenuItem, Select, FormControl, InputLabel } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { FaClock, FaMapPin, FaRegAddressCard } from "react-icons/fa";
@@ -12,9 +12,9 @@ import { IoCallOutline, IoTimeOutline } from "react-icons/io5";
 import { TbPhotoEdit } from "react-icons/tb";
 import BloodtypeIcon from "@mui/icons-material/Bloodtype";
 import Image from "next/image";
+import { SelectChangeEvent } from "@mui/material";
 
-type editDatas = {
-  id: string;
+type UserDetails = {
   age: string;
   gender: string;
   bloodgroup: string;
@@ -28,8 +28,7 @@ function Profilesection() {
   const { details } = useFetchDetails(user?.id ?? "");
   const [isEditing, setIsEditing] = useState(false);
   const [showProfileTooltip, setShowProfileTooltip] = useState(false);
-  const [editData, setEditData] = useState<editDatas | null>(null);
-  const [datas, setDatas] = useState({
+  const [formData, setFormData] = useState<UserDetails & { id?: string }>({
     age: "",
     gender: "",
     bloodgroup: "",
@@ -37,19 +36,22 @@ function Profilesection() {
     address: "",
     profileImage: "",
   });
+
+  const hasExistingDetails = details && details.length > 0;
+
   useEffect(() => {
-    if (details.length > 0) {
-      setEditData({
+    if (hasExistingDetails) {
+      setFormData({
         id: details[0]?._id,
         age: details[0]?.age ?? "",
         gender: details[0]?.gender ?? "",
         bloodgroup: details[0]?.bloodgroup ?? "",
         occupation: details[0]?.occupation ?? "",
         address: details[0]?.address ?? "",
-        profileImage: details[0]?.profileImage?.originalProfile,
+        profileImage: details[0]?.profileImage?.originalProfile ?? "",
       });
     }
-  }, [details]);
+  }, [details, hasExistingDetails]);
 
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -66,61 +68,50 @@ function Profilesection() {
           headers: { "Content-Type": file.type },
         });
         const newImageUrl = `https://vitalaidnsr.s3.${process.env.NEXT_PUBLIC_AWS_REGION}.amazonaws.com/${fileName}`;
-        await setEditData((prev) => ({
+        setFormData(prev => ({
           ...prev,
-          id: prev?.id ?? "",
           profileImage: newImageUrl,
-          age: prev?.age ?? "",
-          gender: prev?.gender ?? "",
-          bloodgroup: prev?.bloodgroup ?? "",
-          occupation: prev?.occupation ?? "",
-          address: prev?.address ?? "",
         }));
       } catch (error) {
         console.error("Error uploading image:", error);
+        toast.error("Failed to upload image");
       }
     }
   };
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
 
-    if (details) {
-      setEditData(
-        (prevData) =>
-          ({
-            ...prevData,
-            [name]: value || "",
-          } as editDatas)
-      );
-    } else {
-      setDatas((prevData) => ({
-        ...prevData,
-        [name]: value || "",
-      }));
-    }
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target as HTMLInputElement;
+    setFormData(prevData => ({
+      ...prevData,
+      [name as string]: value || "",
+    }));
   };
+
+ 
+  
+  const handleSelectChange = (e: SelectChangeEvent<string>) => {
+    const { name, value } = e.target as HTMLInputElement;
+    setFormData(prevData => ({
+      ...prevData,
+      [name as string]: value || "",
+    }));
+  };
+
   const handleSubmit = async () => {
     try {
-      if (isEditing && editData) {
-        console.log("Editing Data:", editData);
-        await axiosInstance.put(`/users/editdetailsofthe`, editData);
-      } else if (isEditing && datas) {
-        console.log("Adding New Data:", datas);
-        await axiosInstance.post(`/users/addDetails/${user?.id}`, editData);
+      if (hasExistingDetails) {
+        
+        await axiosInstance.put(`/users/editdetailsofthe`, formData);
+        toast.success("Profile updated successfully");
+      } else {
+        
+        await axiosInstance.post(`/users/addDetails/${user?.id}`, formData);
+        toast.success("Profile details added successfully");
       }
-
       setIsEditing(false);
-      setDatas({
-        age: "",
-        gender: "",
-        bloodgroup: "",
-        occupation: "",
-        address: "",
-        profileImage: "",
-      });
-      toast.success("aa");
     } catch (error) {
       axiosErrorManager(error);
+      toast.error("Failed to save profile details");
     }
   };
 
@@ -135,13 +126,13 @@ function Profilesection() {
               onMouseLeave={() => setShowProfileTooltip(false)}
             >
               <div
-                className={`rounded-full overflow-hidden h-30 w-30  md:h-40 md:w-40 shadow-xl transition-transform duration-300 ${
+                className={`rounded-full overflow-hidden h-30 w-30 md:h-40 md:w-40 shadow-xl transition-transform duration-300 ${
                   !isEditing && "hover:scale-105"
                 }`}
               >
                 <Image
                   src={
-                    details[0]?.profileImage?.originalProfile?.trim()
+                    hasExistingDetails && details[0]?.profileImage?.originalProfile?.trim()
                       ? details[0]?.profileImage.originalProfile
                       : "https://i.pinimg.com/736x/ed/fe/67/edfe6702e44cfd7715a92390c7d8a418.jpg"
                   }
@@ -182,7 +173,7 @@ function Profilesection() {
                 <h2 className="text-2xl font-semibold text-green-600">
                   {user?.name}
                 </h2>
-                {details[0]?.bloodgroup && (
+                {hasExistingDetails && details[0]?.bloodgroup && (
                   <Chip
                     label={details[0]?.bloodgroup}
                     size="small"
@@ -197,7 +188,7 @@ function Profilesection() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3 w-full max-w-md">
                     <Input
                       name="age"
-                      value={isEditing ? editData?.age : datas.age}
+                      value={formData.age}
                       onChange={handleInputChange}
                       placeholder="Age"
                       className="bg-gray-50 px-3 py-2 rounded"
@@ -205,11 +196,29 @@ function Profilesection() {
                         <FaClock className="mr-2 text-gray-400" />
                       }
                     />
+                    
+                    
+                    <FormControl variant="outlined" className="bg-gray-50 rounded">
+                      <InputLabel id="gender-select-label">Gender</InputLabel>
+                      <Select
+                        labelId="gender-select-label"
+                        id="gender-select"
+                        name="gender"
+                        value={formData.gender}
+                        onChange={handleSelectChange}
+                        label="Gender"
+                        sx={{ minWidth: '100%' }}
+                      >
+                        <MenuItem value=""><em>Select</em></MenuItem>
+                        <MenuItem value="male">Male</MenuItem>
+                        <MenuItem value="female">Female</MenuItem>
+                        <MenuItem value="others">Other</MenuItem>
+                      </Select>
+                    </FormControl>
+                    
                     <Input
                       name="bloodgroup"
-                      value={
-                        isEditing ? editData?.bloodgroup : datas.bloodgroup
-                      }
+                      value={formData.bloodgroup}
                       onChange={handleInputChange}
                       placeholder="Blood Group"
                       className="bg-gray-50 px-3 py-2 rounded"
@@ -222,9 +231,7 @@ function Profilesection() {
                     />
                     <Input
                       name="occupation"
-                      value={
-                        isEditing ? editData?.occupation : datas.occupation
-                      }
+                      value={formData.occupation}
                       onChange={handleInputChange}
                       placeholder="Occupation"
                       className="bg-gray-50 px-3 py-2 rounded"
@@ -232,10 +239,10 @@ function Profilesection() {
                     />
                     <Input
                       name="address"
-                      value={isEditing ? editData?.address : datas.address}
+                      value={formData.address}
                       onChange={handleInputChange}
                       placeholder="Address"
-                      className="bg-gray-50 px-3 py-2 rounded"
+                      className="bg-gray-50 px-3 py-2 rounded col-span-1 md:col-span-2"
                       startAdornment={
                         <FaMapPin className="mr-2 text-gray-400" />
                       }
@@ -244,28 +251,33 @@ function Profilesection() {
                 ) : (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-y-2">
                     <p className="flex items-center gap-2">
-                      <IoTimeOutline size={20} className=" text-gray-500" />{" "}
+                      <IoTimeOutline size={20} className="text-gray-500" />{" "}
                       <span className="font-medium">Age:</span>{" "}
-                      {details[0]?.age || "Not set"}
+                      {hasExistingDetails ? details[0]?.age || "Not set" : "Not set"}
                     </p>
                     <p className="flex items-center gap-2">
-                      <FiMail size={20} className=" text-gray-500" />{" "}
+                      <FiMail size={20} className="text-gray-500" />{" "}
                       {user?.email}
                     </p>
                     <p className="flex items-center gap-2">
-                      <IoCallOutline size={20} className=" text-gray-500" />{" "}
+                      <IoCallOutline size={20} className="text-gray-500" />{" "}
                       {user?.phone || "Not set"}
                     </p>
                     <p className="flex items-center gap-2">
-                      <FiEdit size={20} className=" text-gray-500" />{" "}
+                      <FiEdit size={20} className="text-gray-500" />{" "}
+                      <span className="font-medium">Gender:</span>{" "}
+                      {hasExistingDetails ? details[0]?.gender || "Not set" : "Not set"}
+                    </p>
+                    <p className="flex items-center gap-2">
+                      <FiEdit size={20} className="text-gray-500" />{" "}
                       <span className="font-medium">Occupation:</span>{" "}
-                      {details[0]?.occupation || "Not set"}
+                      {hasExistingDetails ? details[0]?.occupation || "Not set" : "Not set"}
                     </p>
 
                     <p className="flex items-center gap-2 col-span-1 md:col-span-2">
-                      <FaRegAddressCard size={20} className=" text-gray-500" />{" "}
+                      <FaRegAddressCard size={20} className="text-gray-500" />{" "}
                       <span className="font-medium">Address:</span>{" "}
-                      {details[0]?.address || "Not set"}
+                      {hasExistingDetails ? details[0]?.address || "Not set" : "Not set"}
                     </p>
                   </div>
                 )}
@@ -276,7 +288,7 @@ function Profilesection() {
                       className="bg-blue-500 text-white px-4 py-2 rounded"
                       onClick={handleSubmit}
                     >
-                      {isEditing ? "Update" : "Add"}
+                      {hasExistingDetails ? "Update" : "Add"}
                     </Button>
 
                     <Button
@@ -290,12 +302,12 @@ function Profilesection() {
                 ) : (
                   <Button
                     onClick={() => setIsEditing(true)}
-                    variant="outlined"
+                    variant="text"
                     color="primary"
                     startIcon={<FiEdit />}
                     className="mt-2"
                   >
-                    Edit Profile
+                    {hasExistingDetails ? "Edit Profile" : "Add Profile Details"}
                   </Button>
                 )}
               </div>

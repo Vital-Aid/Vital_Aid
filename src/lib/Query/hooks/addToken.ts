@@ -140,6 +140,7 @@ export const useGetTokenForUser = (id: string) => {
         data: tokens = [], 
         isLoading,
         error,
+        refetch
     } = useQuery({
         queryKey: ["allTokenUser", id],
         queryFn: () => getTokensForUsers(id),
@@ -147,5 +148,5 @@ export const useGetTokenForUser = (id: string) => {
         retry: 2,
     });
 
-    return { tokens, isLoading, error };
+    return { tokens, isLoading, error ,refetch};
 };
