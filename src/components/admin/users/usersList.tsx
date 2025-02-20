@@ -195,9 +195,7 @@ function UsersList() {
                     variant="contained"
                     color={user.blocked ? "primary" : "error"}
                     onClick={() => handleBlockUser(user._id)}
-                    startIcon={
-                      user.blocked ? <CheckCircleIcon /> : <BlockIcon />
-                    }
+                    startIcon={user.blocked ? <CheckCircleIcon /> : <BlockIcon />}
                     size="small"
                   >
                     {user.blocked ? "Unblock" : "Block"}

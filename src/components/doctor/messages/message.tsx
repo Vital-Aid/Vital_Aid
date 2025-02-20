@@ -1,17 +1,21 @@
 "use client";
-
 import React, { useEffect, useState, useRef } from "react";
 import { useAppSelector } from "@/lib/store/hooks";
 import axiosInstance from "@/utils/axios";
 import { initializeSocket, socket } from "@/lib/socket/socketinstanc";
 import { GrSend } from "react-icons/gr";
 import { FaSearch, FaUser } from "react-icons/fa";
+import { useRouter } from "next/navigation";
 
 interface User {
   _id: string;
   name: string;
   email: string;
   phone: string;
+  
+}
+interface FormatTime {
+  (timestamp: string): string;
 }
 
 interface Message {
@@ -20,13 +24,16 @@ interface Message {
   receiverId: string;
   receiverModel: "User" | "Doctor";
   message: string;
+  createdAt: string;
 }
 
 const DrMessage = () => {
   const { user: doctor } = useAppSelector((state) => state.auth);
-  console.log(doctor);
+  console.log("hhhhhh",doctor);
   
   const [users, setUsers] = useState<User[]>([]);
+  console.log(users);
+  
   const [search, setSearch] = useState("");
   const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
@@ -34,6 +41,7 @@ const DrMessage = () => {
   const [newMessage, setNewMessage] = useState("");
   const chatEndRef = useRef<HTMLDivElement>(null);
   const [receivedMsgs] = useState(new Set());
+  const router=useRouter()
 
   useEffect(() => {
     if (doctor?.id) {
@@ -54,6 +62,15 @@ const DrMessage = () => {
   }, [doctor?.id]);
 
   useEffect(() => {
+    if (selectedUser && doctor?.id) {
+      axiosInstance
+        .get(`/users/messageof/${doctor.id}/${selectedUser._id}`)
+        .then((res) => setMessages(res.data.data))
+        .catch((err) => console.error("Error fetching chat:", err));
+    }
+  }, [selectedUser, doctor?.id]);
+  
+  useEffect(() => {
     const handleReceiveMessage = (msg: Message) => {
       if (
         msg.senderId === selectedUser?._id &&
@@ -70,14 +87,7 @@ const DrMessage = () => {
     };
   }, [selectedUser, receivedMsgs]);
 
-  useEffect(() => {
-    if (selectedUser && doctor?.id) {
-      axiosInstance
-        .get(`/users/messageof/${doctor.id}/${selectedUser._id}`)
-        .then((res) => setMessages(res.data.data))
-        .catch((err) => console.error("Error fetching chat:", err));
-    }
-  }, [selectedUser, doctor?.id]);
+ 
 
   useEffect(() => {
     const filtered = users.filter((u) =>
@@ -98,6 +108,7 @@ const DrMessage = () => {
         receiverId: selectedUser._id,
         receiverModel: "User",
         message: newMessage.trim(),
+        createdAt: new Date().toISOString(),
       };
 
       try {
@@ -117,6 +128,17 @@ const DrMessage = () => {
       e.preventDefault();
       sendMessage();
     }
+  };
+
+
+
+  const formatTime: FormatTime = (timestamp) => {
+    if (!timestamp) return "";
+    return new Date(timestamp).toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    });
   };
 
   return (
@@ -192,12 +214,12 @@ const DrMessage = () => {
         {selectedUser ? (
           <>
 
-            <div className="bg-blue-400 text-white px-6 py-4 shadow-md">
-              <div className="flex items-center gap-3">
+            <div className="bg-blue-400 text-white px-6 py-4 shadow-md" >
+              <div className="flex items-center gap-3"onClick={()=>router.push(`/doctor/patient/${selectedUser._id}`)}>
                 <div className="h-10 w-10 rounded-full bg-white bg-opacity-20 flex items-center justify-center flex-shrink-0">
                   <FaUser className="text-white" />
                 </div>
-                <div>
+                <div >
                   <h2 className="text-lg font-semibold">
                     Chat with {selectedUser.name}
                   </h2>
@@ -220,13 +242,16 @@ const DrMessage = () => {
                     }`}
                   >
                     <div
-                      className={`p-3 rounded-lg max-w-[70%] break-words shadow-sm ${
+                      className={`p-3 rounded-lg max-w-[50%] break-words shadow-sm ${
                         msg.senderId === doctor?.id
                           ? "bg-blue-500 text-white"
                           : "bg-white text-gray-800 border border-gray-200"
                       }`}
                     >
                       {msg.message}
+                      <p className="text-xs text-black mt-1 text-right">
+                        {formatTime(msg.createdAt)}
+                      </p>
                     </div>
                   </div>
                 ))
