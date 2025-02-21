@@ -1,9 +1,13 @@
 import React from 'react';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { Box } from '@mui/material';
+import { useCountFetch } from '@/lib/Query/hooks/useRequest';
 
 const LoginActivityChart = () => {
-  // If no data is provided, use sample data
+  const {count}=useCountFetch()
+  console.log(count.count);
+  
+  
   const sampleData = [
     { day: 'prev4', count: 5 },
     { day: 'prev3', count: 8 },
@@ -11,12 +15,12 @@ const LoginActivityChart = () => {
     { day: 'prev1', count: 7 },
     { day: 'prev', count: 10 },
     { day: 'yesterday', count: 3 },
-    { day: 'today', count: 2 },
+    { day: 'today', count: count?.count},
   ];
 
   const chartData =  sampleData;
   
-  // Extract days and counts for the chart
+
   const days = chartData.map(item => item.day);
   const counts = chartData.map(item => item.count);
 
@@ -32,7 +36,7 @@ const LoginActivityChart = () => {
           {
             data: counts,
             label: 'Logined users',
-            color: '#2196f3',
+            color: '#ff9999',
             valueFormatter: (value) => `${value} logins`,
           },
         ]}

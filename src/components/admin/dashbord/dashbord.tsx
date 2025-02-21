@@ -14,33 +14,46 @@ import { useAppSelector, useAppDispatch } from "@/lib/store/hooks";
 import { fetchUsers } from "@/lib/store/features/userlistSlice";
 import { fetchDonors } from "@/lib/store/features/donorsSlice";
 import { fetchEvents } from "@/lib/store/features/eventSlice";
-import { getallEquipment } from "@/lib/store/features/EquipmentSlice";
 import { getAllvolunteers } from "@/lib/store/features/volunteers";
 import { useDoctor } from "@/lib/Query/hooks/useDoctor";
 import MUIDonationChart from "./revenewchart";
 import LoginActivityChart from "./loginactivitybar";
+import { useDonation } from "@/lib/Query/hooks/useDonation";
+import { useEquCountFetch } from "@/lib/Query/hooks/useRequest";
 
 function Dashboard() {
   const dispatch = useAppDispatch();
   const { users } = useAppSelector((state) => state.users);
   const { donors } = useAppSelector((state) => state.donors);
   const { events } = useAppSelector((state) => state.events);
-  const { allEquipment } = useAppSelector((state) => state.equipments);
   const { allVolunteers } = useAppSelector((state) => state.volunteers);
   const { data } = useDoctor(1, 20);
+  const { data: donation } = useDonation();
+  const [totaldonation,setTotal]=React.useState(0)
+  const {eqcount}=useEquCountFetch()
+  console.log(eqcount[0]?.totalCount);
+  
+console.log(totaldonation);
+
+
+  React.useEffect(() => {
+    if (donation?.totalDonations) {
+      setTotal(donation.totalDonations.total || 0);
+      
+    }
+  }, [donation]);
 
   useEffect(() => {
     dispatch(fetchUsers({ page: 1, limit: 20 }));
     dispatch(fetchDonors({ page: 1, limit: 20 }));
     dispatch(fetchEvents({ page: 1, limit: 20 }));
-    dispatch(getallEquipment({ page: 1, limit: 20 }));
     dispatch(getAllvolunteers({ page: 1, limit: 20 }));
   }, [dispatch]);
 
   return (
     <>
-      <div className="flex w-full flex-row p-8 dark:bg-gray-800 overflow-auto h-full">
-        <main className="mt-6 w-full ">
+      <div className="flex w-full flex-row p-8 dark:bg-gray-800  h-full ">
+        <main className="mt-3 w-full ">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-8">
             <div className="bg-green-100 dark:bg-green-800 shadow-lg rounded-lg p-6 flex flex-col items-center relative">
               <FaUserMd className="absolute top-2 right-2 text-4xl text-green-600 opacity-30" />
@@ -85,10 +98,10 @@ function Dashboard() {
             <div className="bg-indigo-100 dark:bg-indigo-800 shadow-lg rounded-lg p-6 flex flex-col items-center relative">
               <FaLaptopMedical className="absolute top-2 right-2 text-4xl text-indigo-600 opacity-30" />
               <h2 className="text-lg font-semibold text-gray-700 dark:text-gray-300">
-                Available Equipment
+                Total Equipment
               </h2>
               <p className="text-2xl font-bold text-indigo-600">
-                {allEquipment?.length}
+                {eqcount[0]?.totalCount}
               </p>
             </div>
 
@@ -116,12 +129,12 @@ function Dashboard() {
               <h2 className="text-lg font-semibold text-gray-700 dark:text-gray-300">
                 Donations
               </h2>
-              <p className="text-2xl font-bold text-pink-600">$50,000</p>
+              <p className="text-2xl font-bold text-pink-600">₹ {totaldonation}</p>
             </div>
           </div>
         </main>
       </div>
-      <div className="flex mx-auto">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mx-10 overflow-hidden">
         <LoginActivityChart />
         <MUIDonationChart />
       </div>

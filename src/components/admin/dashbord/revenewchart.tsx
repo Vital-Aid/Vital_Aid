@@ -46,7 +46,7 @@ const MUIDonationChart = () => {
             valueFormatter: ({ value }) => formatCurrency(value),
           },
         ]}
-        height={250}
+        height={300}
         margin={{ top: 10, bottom: 30, left: 0, right: 0 }}
         slotProps={{
           legend: {
