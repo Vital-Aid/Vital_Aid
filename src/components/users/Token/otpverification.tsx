@@ -25,10 +25,10 @@ const OTPVerification: React.FC<OTPVerificationProps> = ({ open, onClose,id}) =>
           refetch();
         };
     
-        socket.on("tokenUpdated", handleTokenUpdate);
+        socket.on("otpVerified", handleTokenUpdate);
     
         return () => {
-          socket.off("tokenUpdated", handleTokenUpdate);
+          socket.off("otpVerified", handleTokenUpdate);
         };
       }, [refetch]);
 
@@ -71,7 +71,7 @@ const OTPVerification: React.FC<OTPVerificationProps> = ({ open, onClose,id}) =>
             if (response.data.data?.status) {
                 console.log('sdhfvsg:',response.data?.status);
                 
-                socket.emit("otpVerified", response.data?.data);
+                socket.emit("otpVerification", response.data?.data);
                 toast.success("OTP Verified Successfully");
                 onClose();
             }

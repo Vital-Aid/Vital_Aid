@@ -1,10 +1,10 @@
 
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
-import { fetchDoctorById } from "@/lib/Query/hooks/doctorById";
+import { fetchDoctorById, useDoctorReview } from "@/lib/Query/hooks/doctorById";
 import {
   Box,
   Card,
@@ -19,9 +19,16 @@ import {
   List,
   ListItem,
   ListItemText,
+  Rating,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
 } from "@mui/material";
 import Link from "next/link";
-
+import { IReview } from "@/lib/Query/hooks/doctorById";
+import { Edit } from "@mui/icons-material";
+import ReviewForm from "../Reviews/addReview";
 interface DoctorInfo {
   email: string;
   name: string;
@@ -50,7 +57,10 @@ export default function Doctor() {
     queryFn: () => fetchDoctorById(id as string),
     enabled: !!id,
   });
-
+  const [open, setOpen] = useState(false);
+  const { data: DoctorReviews ,refetch} = useDoctorReview(id as string)
+  console.log("reviewsssss:",DoctorReviews);
+  
   if (isLoading)
     return (
       <Box textAlign="center" py={10}>
@@ -113,7 +123,7 @@ export default function Doctor() {
             </Typography>
 
             <Link href={`/user/doctors/booking/${data.doctor._id}`} passHref>
-              <Button variant="contained" color="error" sx={{ mt: 3, px: 4, py: 1, fontSize: 16,bgcolor:"#450a0a" }}>
+              <Button variant="contained" color="error" sx={{ mt: 3, px: 4, py: 1, fontSize: 16, bgcolor: "#450a0a" }}>
                 Book Appointment
               </Button>
             </Link>
@@ -150,14 +160,80 @@ export default function Doctor() {
             Additional Information
           </Typography>
           <List dense>
-            
+
             <ListItem>
-              <ListItemText primary={`Consultation Fee: ${data.consultationFee||'Free'}`} />
+              <ListItemText primary={`Consultation Fee: ${data.consultationFee || 'Free'}`} />
             </ListItem>
             <ListItem>
               <ListItemText primary={`Availability: ${data.availability}`} />
             </ListItem>
           </List>
+          <Box display="flex" flexDirection="column" alignItems="center" py={4} px={2}>
+            {/* Reviews Header with Pencil Icon */}
+            <Box display="flex" justifyContent="space-between" alignItems="center" width="100%" maxWidth={900} mt={3}>
+              <Typography variant="h6" fontWeight="bold" color="text.primary">
+                Reviews
+              </Typography>
+              <Edit
+                sx={{
+                  cursor: "pointer",
+                  color: "gray",
+                  "&:hover": { color: "black" },
+                  fontSize: 24,
+                }}
+                onClick={() => setOpen(true)} // Open dialog
+              />
+            </Box>
+
+            {/* Reviews Box */}
+            <Box
+              sx={{
+                maxHeight: "250px",
+                overflowY: "auto",
+                mt: 2,
+                p: 2,
+                border: "1px solid #e0e0e0",
+                borderRadius: 2,
+                bgcolor: "#f9f9f9",
+                width: "100%",
+                maxWidth: 900,
+              }}
+            >
+              {DoctorReviews?.length ? (
+                DoctorReviews.map((review: IReview, index: number) => (
+                  <ListItem key={index} alignItems="flex-start" sx={{ borderBottom: "1px solid #ddd", pb: 1, mb: 1 }}>
+                    {/* Left Side - Review Content */}
+                    <Box flex={1}>
+                      <Typography variant="subtitle1" fontWeight="bold">
+                        {review.userId.name} {/* Assuming review has a user field */}
+                      </Typography>
+                      <Rating value={review.rating} precision={0.5} readOnly size="small" />
+                      <Typography variant="body2" color="text.secondary">
+                        {review.comment}
+                      </Typography>
+                    </Box>
+                  </ListItem>
+                ))
+              ) : (
+                <Typography variant="body2" color="text.secondary" textAlign="center">
+                  No reviews yet.
+                </Typography>
+              )}
+            </Box>
+
+            {/* Dialog Box for Adding Review */}
+            <Dialog open={open} onClose={() => setOpen(false)} maxWidth="sm" fullWidth>
+              <DialogTitle textAlign="center">Add a Review</DialogTitle>
+              <DialogContent>
+                <ReviewForm doctorId={id as string} refetch={refetch} setOpen={setOpen(false)}/>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={() => setOpen(false)} color="error">
+                  Cancel
+                </Button>
+              </DialogActions>
+            </Dialog>
+          </Box>
         </CardContent>
       </Card>
     </Box>

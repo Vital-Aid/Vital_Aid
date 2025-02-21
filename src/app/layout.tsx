@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import SessionProvider from "@/providers.ts/authProvider"
+import SessionProvider from "../providers/authProvider"
 import { getServerSession } from "next-auth";
 import StoreProvider from "@/lib/store/store-provider";
 import Providers from "@/lib/Query/providers";
 import {Toaster} from 'react-hot-toast'
 import { Poppins } from "next/font/google";
+import Script from "next/script";
 
 
 const poppins = Poppins({
@@ -37,7 +38,7 @@ export default async function RootLayout({
           <StoreProvider>
             <Providers>
             <Toaster position="top-right" reverseOrder={false} />
-            <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+            <Script src="https://checkout.razorpay.com/v1/checkout.js"></Script>
 
               {children}
             </Providers>

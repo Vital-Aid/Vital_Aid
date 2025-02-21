@@ -22,15 +22,22 @@ const AllTokens = () => {
 
 
   useEffect(() => {
+
+  if (!socket.connected) {
+    socket.connect(); 
+  }
+    
     const handleTokenUpdate = () => {
-      console.log("Received tokenUpdated or otpVerified event");
+      
       refetch();
     };
-  
-    socket.on("tokenUpdated", handleTokenUpdate);
+    socket.on("connect", () => console.log("✅ Socket connected:", socket.id));
+
+    
     socket.on("otpVerified", handleTokenUpdate);
   
     return () => {
+
       socket.off("tokenUpdated", handleTokenUpdate);
       socket.off("otpVerified", handleTokenUpdate);
     };
@@ -138,10 +145,10 @@ const AllTokens = () => {
                   }
                 }}
                 style={{
-                  position: "absolute", // Position it absolutely
-                  top: 10, // Adjust the top margin
-                  right: 10, // Adjust the right margin
-                  zIndex: 1, // Ensure it's above the content
+                  position: "absolute", 
+                  top: 10, 
+                  right: 10,
+                  zIndex: 1, 
                 }}
               >
                 <option value="Edit status">Edit status</option>
@@ -168,7 +175,7 @@ const AllTokens = () => {
                   sx={{
                     color: appointment.status === "Completed" ? "green" :
                       appointment.status === "cancelled" ? "red" :
-                        appointment.status === "pending" ? "yellow" : "inherit"
+                        appointment.status === "pending" ? "orange" : "inherit"
                   }}
                 >
                   <strong>Status:</strong> {appointment.status || "N/A"}
