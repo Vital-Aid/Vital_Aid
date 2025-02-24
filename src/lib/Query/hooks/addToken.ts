@@ -20,7 +20,6 @@ export interface Doctor {
     email: string;
     phone: string;
     drDetails?: DrDetails;
-    drDetails?: DrDetails;
 }
 export interface TokenType {
     _id: string;
@@ -35,9 +34,7 @@ const fetchtokens = async (id: string) => {
     const response = await axiosInstance.get(`/users/getalltokens/${id}`);
     return response.data;
 };
-    const response = await axiosInstance.get(`/users/getalltokens/${id}`);
-    return response.data;
-};
+
 
 export const useAlltoken = (id: string) => {
     return useQuery({
@@ -112,11 +109,7 @@ export const useAlltokenforuser = (date: string) => {
     });
 };
 
-export const cancellToken = async (
-    id: string,
-    status: string,
-    refetch: () => void
-) => {
+
 export const cancellToken = async (
     id: string,
     status: string,
