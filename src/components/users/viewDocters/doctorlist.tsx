@@ -21,7 +21,6 @@ interface Doctor {
 
 function DoctorList() {
   const { doctors } = useDoctorUser();
-  console.log(doctors, 'hfjnd');
 
   const doctorList: Doctor[] = Array.isArray(doctors?.data?.data)
     ? doctors.data?.data

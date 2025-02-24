@@ -6,17 +6,18 @@ import axiosErrorManager from "@/utils/axiosErrormanager";
 import toast from "react-hot-toast";
 
 interface ReviewFormProps {
-    doctorId: string;
-    refetch:()=>void
-    setOpen:()=>void
-  }
+  doctorId: string;
+  refetch: () => void;
+  setOpen: (open: boolean) => void;
+}
+
 const ReviewForm: React.FC<ReviewFormProps> = ({doctorId,refetch,setOpen}) => {
   const [rating, setRating] = useState<number | null>(null);
   const [comment, setComment] = useState("");
 const handleSubmit=async()=>{
     try {
         await axiosInstance.post("/users/addreview",{doctorId,rating,comment})
-        setOpen()
+        setOpen(false)
         toast.success("Review Added Successfully")
         refetch()
     } catch (error) {
@@ -60,12 +61,13 @@ const handleSubmit=async()=>{
         rows={3}
         value={comment}
         onChange={(e) => setComment(e.target.value)}
-        sx={{ mb: 2 }}
+        sx={{ mb: 2,scrollbarWidth:"none"}}
+        
       />
 
       {/* Submit Button */}
       <Button variant="contained" color="primary" fullWidth disabled={!rating} onClick={handleSubmit}>
-        Submit Review
+        Add
       </Button>
     </Card>
   );

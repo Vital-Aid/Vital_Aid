@@ -24,6 +24,7 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
+  Tooltip,
 } from "@mui/material";
 import Link from "next/link";
 import { IReview } from "@/lib/Query/hooks/doctorById";
@@ -57,10 +58,10 @@ export default function Doctor() {
     queryFn: () => fetchDoctorById(id as string),
     enabled: !!id,
   });
+
   const [open, setOpen] = useState(false);
-  const { data: DoctorReviews ,refetch} = useDoctorReview(id as string)
-  console.log("reviewsssss:",DoctorReviews);
-  
+  const { data: DoctorReviews, refetch } = useDoctorReview(id as string)
+
   if (isLoading)
     return (
       <Box textAlign="center" py={10}>
@@ -174,15 +175,17 @@ export default function Doctor() {
               <Typography variant="h6" fontWeight="bold" color="text.primary">
                 Reviews
               </Typography>
-              <Edit
-                sx={{
-                  cursor: "pointer",
-                  color: "gray",
-                  "&:hover": { color: "black" },
-                  fontSize: 24,
-                }}
-                onClick={() => setOpen(true)} // Open dialog
-              />
+              <Tooltip title="Add a Review" placement="bottom">
+                <Edit
+                  sx={{
+                    cursor: "pointer",
+                    color: "gray",
+                    "&:hover": { color: "black" },
+                    fontSize: 24,
+                  }}
+                  onClick={() => setOpen(true)} 
+                />
+              </Tooltip>
             </Box>
 
             {/* Reviews Box */}
@@ -197,15 +200,16 @@ export default function Doctor() {
                 bgcolor: "#f9f9f9",
                 width: "100%",
                 maxWidth: 900,
+                scrollbarWidth: "none"
               }}
             >
               {DoctorReviews?.length ? (
                 DoctorReviews.map((review: IReview, index: number) => (
                   <ListItem key={index} alignItems="flex-start" sx={{ borderBottom: "1px solid #ddd", pb: 1, mb: 1 }}>
-                    {/* Left Side - Review Content */}
-                    <Box flex={1}>
+
+                    <Box flex={1} >
                       <Typography variant="subtitle1" fontWeight="bold">
-                        {review.userId.name} {/* Assuming review has a user field */}
+                        {review.userId.name}
                       </Typography>
                       <Rating value={review.rating} precision={0.5} readOnly size="small" />
                       <Typography variant="body2" color="text.secondary">
@@ -225,7 +229,7 @@ export default function Doctor() {
             <Dialog open={open} onClose={() => setOpen(false)} maxWidth="sm" fullWidth>
               <DialogTitle textAlign="center">Add a Review</DialogTitle>
               <DialogContent>
-                <ReviewForm doctorId={id as string} refetch={refetch} setOpen={setOpen(false)}/>
+                <ReviewForm doctorId={id as string} refetch={refetch} setOpen={setOpen} />
               </DialogContent>
               <DialogActions>
                 <Button onClick={() => setOpen(false)} color="error">
