@@ -18,7 +18,6 @@ type Message = {
   _id: string;
   message: string;
 };
-
 const Home = () => {
   const { user } = useAppSelector((state) => state.auth);
   const Router = useRouter();

@@ -9,12 +9,12 @@ const fetchReports = async (id: string) => {
 };
 
 export function useFetchreport(id: string) {
-  const { data: reports = [] ,refetch} = useQuery({
+  const { data: reports = [] } = useQuery({
     queryKey: ["report", id],
     queryFn: () => fetchReports(id),
     enabled: !!id,
   });
-  return { reports,refetch };
+  return { reports };
 }
 
 const fetchDetails = async (id: string) => {
@@ -35,7 +35,7 @@ export function useFetchDetails(id: string) {
     isLoading,
     isError,
     error,
-    refetch
+    refetch,
   } = useQuery({
     queryKey: ["details", id],
     queryFn: () => fetchDetails(id),
