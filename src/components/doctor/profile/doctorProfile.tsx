@@ -54,7 +54,11 @@ const DoctorProfile: React.FC<Props> = ({ doctor }) => {
 
 
             <Box display="flex" alignItems="center" width="100%" px={2}>
-                <Avatar src={doctor?.profileImage || "/doctor-image.jpg"} alt={doctor?.doctor?.name} sx={{ width: 120, height: 120, marginRight: 2 }} />
+                <Avatar
+                    src={doctor?.profileImage || "/doctor-image.jpg"}
+                    alt={doctor?.doctor?.name}
+                    sx={{ width: 120, height: 120, marginRight: 2 }}
+                />
 
                 <CardContent sx={{ flex: 1 }}>
                     <Typography variant="h6" fontWeight="bold" color="primary">
@@ -64,7 +68,8 @@ const DoctorProfile: React.FC<Props> = ({ doctor }) => {
                         {doctor?.qualification?.join(", ") || "Qualification Not Available"}
                     </Typography>
                     <Typography variant="body2" color="textSecondary">
-                        {doctor?.specialization?.join(", ") || "Specialization Not Available"}
+                        {doctor?.specialization?.join(", ") ||
+                            "Specialization Not Available"}
                     </Typography>
 
                     <Divider sx={{ my: 1, borderColor: "blue" }} />
@@ -122,7 +127,11 @@ const DoctorProfile: React.FC<Props> = ({ doctor }) => {
                 </CardContent>
             </Box>
 
-            <Typography variant="body2" color="textSecondary" sx={{ mt: 2, textAlign: "center" }}>
+            <Typography
+                variant="body2"
+                color="textSecondary"
+                sx={{ mt: 2, textAlign: "center" }}
+            >
                 {doctor?.description || "No description available."}
             </Typography>
         </Card>
