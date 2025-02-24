@@ -17,7 +17,7 @@ function Hero() {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        marginLeft: { md: "260px", xs: "0" }, 
+        marginLeft: { md: "160px", xs: "0" }, 
         width: { md: "calc(100% - 260px)", xs: "100%" }, 
       }}
     >

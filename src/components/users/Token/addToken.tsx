@@ -66,7 +66,9 @@ const AddToken = () => {
   const [selectedSlot, setSelectedSlot] = useState<number | null>(null);
   const[open,setOpen]=useState<boolean>(false)
 
-  const doctor: DoctorData = data?.data[0];
+
+  const doctor: DoctorData = data?.data?.[0]
+  console.log('data',doctor);
   const totalslots = totalToken?.data?.tokenPerDay;
   const AllToken: Token[] = allToken?.data;
 
@@ -112,6 +114,7 @@ const AddToken = () => {
   }
   return (
     <div className="w-screen mt-10">
+     
       <Box
         p={2}
         sx={{
@@ -188,6 +191,9 @@ const AddToken = () => {
               border: "2px solid gray",
             }}
           />
+          {/* {doctor.map((doctors:DoctorData[])=>(
+
+          ))} */}
           <Box>
             <Typography variant="h6" fontWeight="bold">{doctor?.doctor?.name}</Typography>
             <Typography variant="body2" color="gray">{doctor?.specialization[0]}</Typography>

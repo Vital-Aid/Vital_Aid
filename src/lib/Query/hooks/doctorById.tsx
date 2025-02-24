@@ -4,6 +4,8 @@ import { useQuery } from "@tanstack/react-query";
 export interface IUser {
     _id: string;
     name: string;
+    profileImage:string|null
+
   }
 export interface IReview {
     _id: string;
@@ -46,3 +48,18 @@ export const useDoctorReview = (id:string) => {
     });
 };
     
+
+const fetchReviewsforDoctors=async(id:string)=>{
+    const response= await axiosInstance.get(`/doctors/getallreview/${id}`)
+    console.log("sdhfsgyftye",response.data);
+    
+     return response.data?.data
+ }
+ 
+ export const useDoctorReviewforDoctors = (id:string) => {
+     return useQuery({
+         queryKey: ["reviews", id],
+         queryFn: () =>fetchReviewsforDoctors(id),
+     });
+ };
+     
