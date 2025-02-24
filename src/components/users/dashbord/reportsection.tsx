@@ -50,7 +50,7 @@ function Reportsection() {
           <div className="flex justify-start">
             <h3 className="text-lg font-semibold text-gray-500 flex items-center">
               <MedicalServicesIcon className="mr-2" fontSize="small" />
-              Medical Report
+              Medical Reports
               
             </h3>
           </div>
@@ -104,9 +104,9 @@ function Reportsection() {
                 style={{ fontSize: 40 }}
                 className="text-gray-300 mb-2"
               />
-              <p>No reports available</p>
+              
               <Button
-                variant="outlined"
+                variant="text"
                 size="small"
                 color="primary"
                 className="mt-2"

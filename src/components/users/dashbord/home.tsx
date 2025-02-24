@@ -155,7 +155,7 @@ const Home = () => {
               ) : (
                 messages.map((msg: Message) => (
                   <Fade in={true} key={msg._id}>
-                    <div className="p-3 bg-gradient-to-r from-purple-50 to-white rounded-lg shadow-sm hover:shadow-md transition-all border-l-4 border-teal-400">
+                    <div className="p-3 bg-gradient-to-r from-purple-50 to-white rounded-lg shadow-sm hover:shadow-md transition-all border-l-4 border-teal-400 text-sm md:text-base">
                       {msg.message}
                     </div>
                   </Fade>
@@ -183,56 +183,6 @@ const Home = () => {
         </div>
       </div>
 
-      <div className="fixed bottom-0 left-0 w-full bg-white shadow-lg p-3 flex justify-around items-center gap-1 sm:hidden z-10 border-t border-gray-200">
-        <Button
-          onClick={() => Router.push("/user/events")}
-          variant="text"
-          className="flex flex-col items-center min-w-0 px-2"
-          style={{ color: "#e53e3e" }}
-        >
-          <EventIcon />
-          <span className="text-xs mt-1">Events</span>
-        </Button>
-
-        <Button
-          onClick={() => Router.push("/user/equipments")}
-          variant="text"
-          className="flex flex-col items-center min-w-0 px-2"
-          style={{ color: "#3182ce" }}
-        >
-          <MedicalServicesIcon />
-          <span className="text-xs mt-1">Equipment</span>
-        </Button>
-
-        <Button
-          onClick={() => Router.push("/user/doctors")}
-          variant="contained"
-          className="flex flex-col items-center rounded-full w-14 h-14 shadow-lg transform -translate-y-5 bg-green-500 hover:bg-green-600"
-        >
-          <FaStethoscope className="w-5 h-5 mt-1" />
-          <span className="text-xs mt-1">Doctor</span>
-        </Button>
-
-        <Button
-          onClick={() => Router.push("/user/bloodDonors")}
-          variant="text"
-          className="flex flex-col items-center min-w-0 px-2"
-          style={{ color: "#e53e3e" }}
-        >
-          <BloodtypeIcon />
-          <span className="text-xs mt-1">Blood</span>
-        </Button>
-
-        <Button
-          onClick={() => Router.push("/user/volunteers")}
-          variant="text"
-          className="flex flex-col items-center min-w-0 px-2"
-          style={{ color: "#805ad5" }}
-        >
-          <VolunteerActivismIcon />
-          <span className="text-xs mt-1">Help</span>
-        </Button>
-      </div>
     </div>
   );
 };

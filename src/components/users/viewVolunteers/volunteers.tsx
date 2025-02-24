@@ -45,7 +45,7 @@ function Volunteers() {
   return (
     <>
       <HowItWorks />
-      <div className="mx-20 p-5 flex flex-col items-center">
+      <div className="mx-auto md:mx-20 p-5 flex flex-col items-center">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 w-full ">
           {data?.allVolunteers.map((volunteer) => (
             <div
@@ -68,9 +68,9 @@ function Volunteers() {
           ))}
         </div>
 
-        <div className="flex justify-center items-center gap-3 mt-10">
+        <div className="flex justify-center items-center gap-3 ">
 
-          <Box display="flex" justifyContent="center" sx={{ mt: 3, mb: 3 }}>
+          <Box display="flex" justifyContent="center" sx={{ mt: 3, mb: 8}}>
             <Pagination
               count={data?.totalPages ?? 1}
               page={data?.currentPage ?? 1}

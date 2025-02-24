@@ -45,9 +45,9 @@ function Appoinmentsctn() {
                 className="text-gray-300 mb-2"
                 style={{ fontSize: 36 }}
               />
-              <p>No appointments scheduled</p>
+              
               <Button
-                variant="outlined"
+                variant="text"
                 size="small"
                 color="success"
                 className="mt-2"

@@ -93,7 +93,7 @@ const DonorsList: React.FC = () => {
   });
 
   return (
-    <div className="max-w-full mx-14 p-5">
+    <div className="max-w-full mx-auto md:mx-14 p-5">
       <HowItWorks />
 
       
@@ -101,7 +101,7 @@ const DonorsList: React.FC = () => {
         sx={{
           width: "100%",
           textAlign: "center",
-          py: 4,
+          
         }}
       >
         <Stepper alternativeLabel>
@@ -119,11 +119,11 @@ const DonorsList: React.FC = () => {
         </Stepper>
       </Box>
 
-      <div className="mb-6 flex mt-3 justify-center gap-4">
+      <div className="mb-6 flex mt-3 justify-center gap-2 md:gap-4 mx-auto">
         <input
           type="text"
           placeholder="Search by Name"
-          className="px-4 py-2 border border-gray-300 rounded-md"
+          className="px-2 py-2 border border-gray-300 rounded-md"
           value={filter}
           onChange={handleFilterChange}
         />
@@ -131,7 +131,7 @@ const DonorsList: React.FC = () => {
         <select
           value={selectedBloodGroup}
           onChange={handleBloodGroupChange}
-          className="px-4 py-2 border border-gray-300 rounded-md"
+          className="px-2 py-2 border border-gray-300 rounded-md"
         >
           <option value="">All Blood Groups</option>
           <option value="A+">A+</option>
@@ -181,7 +181,7 @@ const DonorsList: React.FC = () => {
         ))}
       </div>
 
-      <Box display="flex" justifyContent="center" sx={{ mt: 3, mb: 3 }}>
+      <Box display="flex" justifyContent="center" sx={{ mt: 3, mb: 8 }}>
         <Pagination
           count={data?.totalPages ?? 1}
           page={data?.currentPage ?? 1}
