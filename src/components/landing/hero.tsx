@@ -1,44 +1,41 @@
 "use client";
 
 import Image from "next/image";
-import React, { useEffect } from "react";
+import React from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import heroimg from "../../../public/heroimg-removebg-preview.png";
+import { useRouter } from "next/navigation";
 
 function Hero() {
-  useEffect(() => {
-    AOS.init({
-      duration: 1000,
-      once: true,
-    });
-  }, []);
+  AOS.init({
+    duration: 1000,
+  });
+  const Router= useRouter()
 
   return (
-    <div className="mx-16">
-      <div className="bg-gray-50 w-full flex items-center justify-center p-8 rounded-3xl mt-32 py-20">
+    <div className=" mx-auto md:mx-16">
+      <div className="bg-gray-50 w-full flex items-center justify-center p-8 rounded-3xl mt-32 py-20 md:py-20">
         <div className="flex flex-col md:flex-row items-center justify-between max-w-6xl w-full ">
           <div
-            className="text-left mb-8 md:mb-0 md:w-1/2 pr-4"
+            className="text-left mb-8 md:mb-0  md:w-1/2 pr-4"
             data-aos="fade-right"
           >
-            <div className="space-y-4">
-              <h1 className="text-6xl md:text-6xl font-bold text-teal-800 border-black tracking-tight leading-tight ">
+            <div className="space-y-4 ">
+              <h1 className="text-5xl md:text-6xl font-bold text-teal-800 border-black tracking-tight leading-tight ">
                 VitalAid
               </h1>
-              <h1 className="text-5xl md:text-6xl font-bold text-black tracking-tight leading-tight">
-                Empowering
+              <h1 className="text-2xl md:text-6xl font-semibold text-black tracking-tight leading-tight">
+                Your trusted
                 <br />
-                Lives Through
-                <br />
-                Health
+                Health Partner
+                
+                
               </h1>
               <p className="text-gray-500 text-sm md:text-base mt-4">
-                Navigating Health Together: Your Trusted
-                <br />
-                Medical Resource
+                all in one for health support
               </p>
-              <button className="mt-6 flex items-center bg-white text-black px-4 py-2 rounded-full shadow-sm hover:shadow-md transition">
+              <button className="mt-6 flex items-center bg-white text-black px-4 py-2 rounded-full shadow-sm hover:shadow-md transition" onClick={()=>Router.push("/login")}>
                 Get started now
                 <svg
                   className="ml-2 w-4 h-4"
@@ -65,7 +62,7 @@ function Hero() {
             </div>
           </div>
 
-          <div className="md:w-1/2" data-aos="fade-left">
+          <div className=" w-full md:w-1/2 " data-aos="fade-left">
             <div className="relative">
               <div className="relative h-64 md:h-80 w-full">
                 <svg

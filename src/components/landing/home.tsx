@@ -5,14 +5,16 @@ import Specialities from './specialities'
 import Event from './event'
 
 import HealthcareLayout from './healthservice'
+import Aireport from './aireport'
 
 function Homepage() {
   return (
     <div className=' overflow-hidden'>
       <Hero />
       <HealthcareLayout/>
-      <About />
       <Specialities />
+      <Aireport/>
+      <About />
       <Event />
     </div>
   )
