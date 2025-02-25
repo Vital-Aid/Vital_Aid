@@ -49,17 +49,17 @@ export const useDoctorReview = (id:string) => {
 };
     
 
-const fetchReviewsforDoctors=async(id:string)=>{
-    const response= await axiosInstance.get(`/doctors/getallreview/${id}`)
+const fetchReviewsforDoctors=async()=>{
+    const response= await axiosInstance.get(`/doctors/getallreview`)
     console.log("sdhfsgyftye",response.data);
     
      return response.data?.data
  }
  
- export const useDoctorReviewforDoctors = (id:string) => {
+ export const useDoctorReviewforDoctors = () => {
      return useQuery({
-         queryKey: ["reviews", id],
-         queryFn: () =>fetchReviewsforDoctors(id),
+         queryKey: ["reviews"],
+         queryFn: () =>fetchReviewsforDoctors(),
      });
  };
      

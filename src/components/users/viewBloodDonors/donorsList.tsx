@@ -3,19 +3,8 @@
 import { useQuery } from "@tanstack/react-query";
 import axiosInstance from "@/utils/axios";
 import React, { JSX, useState } from "react";
-import React, { JSX, useState } from "react";
 import Image from "next/image";
 import HowItWorks from "./Howitwork";
-import {
-  Box,
-  Pagination,
-  Step,
-  StepLabel,
-  Stepper,
-} from "@mui/material";
-import ContactPhoneOutlinedIcon from "@mui/icons-material/ContactPhoneOutlined";
-import ContentPasteSearchIcon from "@mui/icons-material/ContentPasteSearch";
-import LocalPhoneOutlinedIcon from "@mui/icons-material/LocalPhoneOutlined";
 import {
   Box,
   Pagination,
@@ -70,22 +59,7 @@ interface StepType {
   icon: JSX.Element;
 }
 
-const steps: StepType[] = [
-  {
-    label:
-      "Find volunteers by their blood group",
-    icon: <ContentPasteSearchIcon />,
-  },
-  {
-    label:
-      "contact them directly for help",
-    icon: <LocalPhoneOutlinedIcon />,
-  },
-  {
-    label: "In case of urgent contact multiple donors.",
-    icon: <ContactPhoneOutlinedIcon />,
-  },
-];
+
 
 const fetchDonors = async (page: number): Promise<DonorResponse> => {
   const response = await axiosInstance.get<DonorResponse>(

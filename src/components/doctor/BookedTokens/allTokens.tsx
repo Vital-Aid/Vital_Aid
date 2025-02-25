@@ -12,6 +12,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { Token } from '@/components/users/Token/addToken'
 import Image from 'next/image'
 import { socket } from '@/lib/socket/socketinstanc'
+import Link from 'next/link'
 
 
 
@@ -93,6 +94,8 @@ const AllTokens = () => {
         <Typography color="error" textAlign="center">Failed to load appointments.</Typography>
       ) : tokens.length > 0 ? (
         tokens.map((appointment, index) => (
+          <Link key={index} href={`/doctor/patient/${appointment.patientId._id}`}>
+
           <Card
             key={index}
             sx={{
@@ -186,7 +189,7 @@ const AllTokens = () => {
               </CardContent>
             </Box>
           </Card>
-
+</Link>
 
         ))
       ) : (

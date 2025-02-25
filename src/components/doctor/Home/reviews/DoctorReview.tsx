@@ -1,14 +1,12 @@
 "use client"
 import { IReview, useDoctorReviewforDoctors } from '@/lib/Query/hooks/doctorById'
-import { useAppSelector } from '@/lib/store/hooks'
 import { Box, ListItem, Rating, Typography } from '@mui/material'
 import Image from 'next/image'
+import Link from 'next/link'
 import React from 'react'
 
 const DoctorReview = () => {
-    const { user: doctor } = useAppSelector((state) => state.auth)
-    const id = doctor?.id
-    const { data: DoctorReviews } = useDoctorReviewforDoctors(id as string)
+    const { data: DoctorReviews } = useDoctorReviewforDoctors()
     console.log("data:", DoctorReviews);
 
     return (
@@ -45,6 +43,7 @@ const DoctorReview = () => {
                 DoctorReviews.map((review: IReview, index: number) => (
                     <ListItem key={index} alignItems="flex-start" sx={{ borderBottom: "1px solid #ddd", pb: 1, mb: 1 }}>
                         <Box flex={1}>
+                            <Link href={`/doctor/patient/${review.userId._id}`}>
                             <Box display="flex" alignItems="center" mb={1}>
                                 <Image
                                     src={review?.userId?.profileImage || "https://i.pinimg.com/736x/ed/fe/67/edfe6702e44cfd7715a92390c7d8a418.jpg"}
@@ -62,6 +61,7 @@ const DoctorReview = () => {
                                     {review.userId.name}
                                 </Typography>
                             </Box>
+                            </Link>
                             <Rating value={review.rating} precision={0.5} readOnly size="small" />
                             <Typography variant="body2" color="text.secondary">
                                 {review.comment}

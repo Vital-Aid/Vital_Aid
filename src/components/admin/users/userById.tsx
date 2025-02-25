@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, {  useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 import axiosInstance from "@/utils/axios";
@@ -47,18 +47,16 @@ function UserById() {
     enabled: !!id,
   });
 
-  // Ensure `mediHistory` is an array
+  
   const mediHistory: MedicalHistory[] = Array.isArray(user) ? user : [];
 
-  // Extract the first user if multiple reports exist
   const userInfo = mediHistory.length > 0 ? mediHistory[0].User : null;
 
-  // Function to open the modal with the correct report data
   const handleReportClick = (reportItem: MedicalHistory) => {
     setSelectedReport({
       ...reportItem,
-      healthstatus: reportItem.report, // Map report field
-      __v: 0, // Dummy __v value
+      healthstatus: reportItem.report, 
+      __v: 0, 
     });
     setIsReportModalOpen(true);
   };
