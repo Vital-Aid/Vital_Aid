@@ -1,4 +1,4 @@
-import Receipt from '@/components/users/donations/racipts'
+import Receipt from '@/components/users/donations/receipts'
 import React from 'react'
 
 function Page() {
