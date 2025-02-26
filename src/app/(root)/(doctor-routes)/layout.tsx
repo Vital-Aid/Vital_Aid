@@ -1,6 +1,5 @@
 import React, { ReactNode } from "react";
 import Navbar from "../../../components/doctor/Navbar/navbar";
-import Sidebar from "@/components/doctor/sidbar/sidbar";
 
 
 interface LayoutProps {
