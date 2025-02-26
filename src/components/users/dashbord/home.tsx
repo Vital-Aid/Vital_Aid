@@ -2,6 +2,7 @@
 
 import React from "react";
 import BloodtypeIcon from "@mui/icons-material/Bloodtype";
+import ReceiptLongIcon from "@mui/icons-material/ReceiptLong"; 
 import MedicalServicesIcon from "@mui/icons-material/MedicalServices";
 import EventIcon from "@mui/icons-material/Event";
 import VolunteerActivismIcon from "@mui/icons-material/VolunteerActivism";
@@ -120,12 +121,12 @@ const Home = () => {
               <MedicalServicesIcon /> My Requests
             </Button>
             <Button
-              onClick={() => Router.push("/user/doctors/allbooking")}
-              variant="contained"
-              className="w-full flex items-center gap-3 bg-blue-500 hover:bg-blue-600 text-white py-2"
-            >
-              <MedicalServicesIcon /> My Appointments
-            </Button>
+      onClick={() => Router.push("/user/donationDetails")}
+      variant="contained"
+      className="w-full flex items-center gap-3 bg-blue-500 hover:bg-blue-600 text-white py-2"
+    >
+      <ReceiptLongIcon /> View Donation Details
+    </Button>
           </div>
         </div>
 
