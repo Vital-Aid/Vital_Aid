@@ -29,7 +29,6 @@ export const fetchDoctorById = async (id: string) => {
     if (!response.data || !response.data.data || response.data.data.length === 0) {
         throw new Error("Doctor not found");
     }
-
     return response.data.data[0]; 
 };
 

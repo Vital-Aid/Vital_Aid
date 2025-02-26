@@ -192,7 +192,7 @@ const AllTokens = () => {
             </Box>
             
           </Card>
-
+</Link>
 
         ))
       ) : (
