@@ -307,6 +307,7 @@ export default function Doctor() {
 
   const [open, setOpen] = useState(false);
   const { data: DoctorReviews, refetch } = useDoctorReview(id as string)
+console.log('sfyu:',id);
 
   if (isLoading)
     return (
