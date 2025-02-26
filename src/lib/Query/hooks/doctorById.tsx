@@ -29,14 +29,14 @@ export const fetchDoctorById = async (id: string) => {
     if (!response.data || !response.data.data || response.data.data.length === 0) {
         throw new Error("Doctor not found");
     }
-
     return response.data.data[0]; 
 };
 
 
 const fetchReviews=async(id:string)=>{
-   const response= await axiosInstance.get(`users/getallreview/${id}`)
-   console.log("sdhfsgyftye",response.data);
+   const response= await axiosInstance.get(`/users/getallreview/${id}`)
+
+   console.log("sdhfsgyftye",id);
    
     return response.data?.data
 }
@@ -45,6 +45,7 @@ export const useDoctorReview = (id:string) => {
     return useQuery({
         queryKey: ["reviews", id],
         queryFn: () =>fetchReviews(id),
+        enabled: !!id,
     });
 };
     

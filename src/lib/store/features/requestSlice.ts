@@ -41,28 +41,14 @@ export interface User {
     error:null
   }
 
-//   export const getallRequest = createAsyncThunk<{ allRequest: Request[], totalPages: number }, number, { rejectValue: string }>('getallRequest', async (page, { rejectWithValue }) => {
-//     try {
-        
-//         const response = await axiosInstance.get(`/users/userrequest?page=${page}&limit=3`)
-//         return {
-//             allRequest: response.data.allEquipment,
-//             totalPages: response.data.totalPages
-//         }
-//     } catch (error) {
-//         return rejectWithValue(axiosErrorManager(error));
-//     }
-// })
+
 
 
   const RequestSlice=createSlice({
     name:'request',
     initialState,
     reducers:{},
-    // extraReducers:(builders)=>{
-        
-       
-    // }
+  
   })
 
 
