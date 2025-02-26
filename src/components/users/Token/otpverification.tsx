@@ -15,10 +15,11 @@ interface OTPVerificationProps {
 }
 
 const OTPVerification: React.FC<OTPVerificationProps> = ({ open, onClose,id}) => {
-    const { data: allToken, refetch } = useAlltoken(id as string);
+    const {  refetch } = useAlltoken(id as string);
     const otpRef = useRef<Array<HTMLInputElement | null>>([]);
     const [otp, setOtp] = useState<string>('')
     const [error, setError] = useState<boolean>(false)
+console.log(error);
 
     useEffect(() => {
         const handleTokenUpdate = () => {
@@ -32,7 +33,7 @@ const OTPVerification: React.FC<OTPVerificationProps> = ({ open, onClose,id}) =>
         };
       }, [refetch]);
 
-    const handleChange = (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChange = (index: number, e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const value = e.target.value.replace(/\D/g, "")
 
         if (value.length > 1) return;
