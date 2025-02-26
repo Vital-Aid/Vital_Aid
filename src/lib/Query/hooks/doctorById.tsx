@@ -40,6 +40,7 @@ export const useDoctorReview = (id:string) => {
     return useQuery({
         queryKey: ["reviews", id],
         queryFn: () =>fetchReviews(id),
+        enabled: !!id,
     });
 };
     
