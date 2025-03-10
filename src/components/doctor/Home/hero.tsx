@@ -4,7 +4,7 @@
 import React from 'react';
 import { Box, Grid, Typography } from '@mui/material';
 import Image from 'next/image';
-import Doctor from "../../../../public/Doctor.png";
+
 
 function Hero() {
   const username = typeof window !== "undefined" ? localStorage.getItem('username') : '';
