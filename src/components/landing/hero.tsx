@@ -87,7 +87,7 @@ function Hero() {
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div data-aos="fade-left">
                     <Image
-                      src={heroimg}
+                      src="/heroimg-removebg-preview.png"
                       alt="Description of the image"
                       width={450}
                       height={400}
