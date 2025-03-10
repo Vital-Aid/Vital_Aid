@@ -29,7 +29,7 @@ interface MoreDetailsProps {
 }
 
 
-const MoreDetailes: React.FC<MoreDetailsProps> = ({doctor}) => {
+const MoreDetailes: React.FC<MoreDetailsProps> = () => {
     
     
    
