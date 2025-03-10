@@ -192,7 +192,7 @@ const Login: React.FC = () => {
                 <p className="text-white text-2xl sm:text-xl font-medium font-serif">
                   Welcome Doctor
                 </p>
-                <Image src={DRpng} alt="drimg" />
+                <Image src="/Doctor.png" alt="drimg" />
               </div>
             ) : (
               <p className="text-white text-2xl sm:text-xl font-medium font-serif mb-4">
