@@ -90,7 +90,6 @@ console.log(error);
                     Enter the 6-digit OTP sent to your email.
                 </Typography>
 
-                {/* OTP Input Fields - In Single Line */}
                 <Grid container spacing={1} justifyContent="center">
                     {Array.from({ length: 6 }).map((_, index) => (
                         <Grid item key={index}>
@@ -108,8 +107,7 @@ console.log(error);
                     ))}
                 </Grid>
             </DialogContent>
-
-            {/* Verify Button */}
+            
             <DialogActions sx={{ justifyContent: "center", pb: 2 }}>
                 <Button variant="contained" color="primary" fullWidth onClick={handleVerification}>
                     Verify OTP

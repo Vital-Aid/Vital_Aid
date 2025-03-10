@@ -61,10 +61,11 @@ const AddToken = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const today = dayjs();
   const daysInMonth = today.daysInMonth();
-  const [selectedDate, setSelectedDate] = useState<string | null>(null);
+  const [selectedDate, setSelectedDate] = useState<string | null>(today.format("DD-MM-YYYY"));
   const days = Array.from({ length: daysInMonth }, (_, i) => i + 1);
   const [selectedSlot, setSelectedSlot] = useState<number | null>(null);
   const[open,setOpen]=useState<boolean>(false)
+console.log("bb",today.format("DD-MM-YYYY"));
 
 
   const doctor: DoctorData = data?.data?.[0]
