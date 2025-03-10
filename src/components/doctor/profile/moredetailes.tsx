@@ -1,7 +1,9 @@
 "use client";
 
 import React, { useState } from "react";
+
 import { Card, Typography, Button, Grid } from "@mui/material";
+
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
@@ -25,12 +27,14 @@ interface MoreDetailsProps {
   doctor: DoctorDetails;
 }
 
+
 const MoreDetailes: React.FC<MoreDetailsProps> = () => {
   const [selectedStartingTime, setSelectedStartingTime] =
     useState<Dayjs | null>(null);
   const [selectedEndingTime, setSelectedEndingTimt] = useState<Dayjs | null>(
     null
   );
+
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -39,6 +43,7 @@ const MoreDetailes: React.FC<MoreDetailsProps> = () => {
       startingTme: selectedStartingTime?.format("hh:mm A"),
       endingTime: selectedEndingTime?.format("hh:mm A"),
     };
+
 
     try {
       await axiosInstance.put("/doctors/updateavailability", slotData);
@@ -70,6 +75,7 @@ const MoreDetailes: React.FC<MoreDetailsProps> = () => {
 
         <form onSubmit={handleSubmit}>
           <Grid container spacing={3} alignItems="center">
+
             <Grid item xs={12} sm={4}>
               <TimePicker
                 label="Select starting Time"

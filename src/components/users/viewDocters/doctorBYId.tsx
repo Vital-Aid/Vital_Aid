@@ -8,6 +8,7 @@ import {
   Box,
   Card,
   CardContent,
+
   Typography,
   Button,
   CircularProgress,
@@ -17,6 +18,7 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
+
   List,
   ListItem,
   ListItemIcon,
@@ -30,6 +32,7 @@ import { IReview } from "@/lib/Query/hooks/doctorById";
 import { LocationOn, Phone, Email, School, VerifiedUser, Star } from "@mui/icons-material";
 import ReviewForm from "../Reviews/addReview";
 import Image from "next/image";
+
 
 interface DoctorInfo {
   email: string;
@@ -53,8 +56,10 @@ export interface DoctorData {
 
 export default function Doctor() {
   const { id } = useParams();
+
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
 
 
   const { data, error, isLoading } = useQuery<DoctorData>({
@@ -64,6 +69,7 @@ export default function Doctor() {
   });
 
   const [open, setOpen] = useState(false);
+
   const { data: doctorReviews, refetch } = useDoctorReview(id as string);
 
   if (isLoading) {
@@ -420,3 +426,4 @@ export default function Doctor() {
     </Container>
   );
 }
+
