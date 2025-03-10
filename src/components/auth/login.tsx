@@ -12,7 +12,6 @@ import {
 } from "@/lib/store/features/userSlice";
 import LoginModal from "../ui/loginModal";
 import Image from "next/image";
-import DRpng from "../../../public/Doctor.png";
 import { toast } from "react-hot-toast";
 
 const Login: React.FC = () => {
