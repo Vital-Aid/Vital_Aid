@@ -34,7 +34,7 @@ function Hero() {
         {/* Image container */}
         <Grid item xs={12} md={6} display="flex" justifyContent="center">
           <Image
-            src={Doctor}
+            src="/Doctor.png"
             alt="Doctor illustration"
             width={450}
             height={400}
