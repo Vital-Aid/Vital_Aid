@@ -19,6 +19,7 @@ const OTPVerification: React.FC<OTPVerificationProps> = ({ open, onClose,id}) =>
     const otpRef = useRef<Array<HTMLInputElement | null>>([]);
     const [otp, setOtp] = useState<string>('')
     const [error, setError] = useState<boolean>(false)
+    console.log(error)
 
     useEffect(() => {
         const handleTokenUpdate = () => {
