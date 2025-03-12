@@ -47,7 +47,6 @@ export const useDoctorReview = (id:string) => {
 
 const fetchReviewsforDoctors=async()=>{
     const response= await axiosInstance.get(`/doctors/getallreview`)
-    console.log("sdhfsgyftye",response.data);
     
      return response.data?.data
  }
