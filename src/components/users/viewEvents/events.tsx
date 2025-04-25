@@ -2,6 +2,7 @@
 import React from "react";
 import useEvents from "@/lib/Query/hooks/useEvents";
 import Image from "next/image";
+import Spinner from "@/components/ui/spinner";
 
 type Event = {
   _id: string;
@@ -17,7 +18,7 @@ const Events: React.FC = () => {
   const { events, isLoading, error } = useEvents();
 
   if (isLoading)
-    return <p className="text-center text-blue-500">Loading events...</p>;
+    return <Spinner/>
 
   if (error || events?.error === "true")
     return <p className="text-center text-red-500">Error loading events!</p>;
@@ -36,7 +37,7 @@ const Events: React.FC = () => {
   const sortedEvents = [...upcomingEvents, ...expiredEvents];
 
   return (
-    <div className="max-w-6xl mx-auto p-5">
+    <div className="max-w-6xl mx-auto p-5 h-full min-h-screen">
       <h1 className="text-3xl font-semibold text-center  text-red-950 mb-6">
         Upcoming  Events
       </h1>
