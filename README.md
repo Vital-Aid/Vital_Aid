@@ -1,6 +1,3 @@
-Of course! Here's a **professional GitHub README** for your *VitalAid* project based on the information you shared:
-
----
 
 # VitalAid 🏥
 
