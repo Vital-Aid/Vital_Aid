@@ -136,7 +136,7 @@ export const loginadmin = createAsyncThunk<
     console.log(response);
 
     const { data } = response;
-    console.log("role", data.user);
+    
 
     return {
       name: data.user.name,
@@ -162,6 +162,7 @@ const userSlice = createSlice({
       state.error = null;
       Cookies.remove("user");
       localStorage.removeItem("userState");
+      localStorage.clear()
       Cookies.remove("accessToken")
       Cookies.remove("refreshToken")
 
