@@ -40,7 +40,14 @@ type LoginFulfilledType = {
 type LoginArgumentType = { email: string|null|undefined; password: string|null|undefined };
 type LoginRejectValueType = string;
 
-const storedUser = localStorage.getItem("userState");
+const getStoredUser = () => {
+  if (typeof window !== "undefined") {
+    return localStorage.getItem("userState");
+  }
+  return null;
+};
+
+const storedUser = getStoredUser();
 
 const initialState: UserState = storedUser
   ? JSON.parse(storedUser)
@@ -138,7 +145,7 @@ export const loginadmin = createAsyncThunk<
     console.log(response);
 
     const { data } = response;
-    console.log("role", data.user);
+    
 
     return {
       name: data.user.name,
@@ -164,6 +171,7 @@ const userSlice = createSlice({
       state.error = null;
       Cookies.remove("user");
       localStorage.removeItem("userState");
+      localStorage.clear()
       Cookies.remove("accessToken")
       Cookies.remove("refreshToken")
 
