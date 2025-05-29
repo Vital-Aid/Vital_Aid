@@ -10,8 +10,11 @@ import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
+
 const EquipmentbyId = () => {
   const { equipment } = useAppSelector((state) => state.equipments);
+  console.log(equipment);
+  
   const dispatch = useAppDispatch();
   const [adress, setAdress] = useState<string>("");
   const { id } = useParams();
@@ -37,7 +40,7 @@ const EquipmentbyId = () => {
       <div className="flex flex-col sm:flex-row justify-center items-center max-w-5xl bg-white shadow-lg rounded-2xl p-6">
         <div>
           <Image
-            src={equipment?.image ? equipment.image : "/Equipment image.png"}
+            src={equipment?.image ?? "/default-image.png"}
             alt="Equipment image"
             width={900}
             height={400}
