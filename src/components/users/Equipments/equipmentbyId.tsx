@@ -9,9 +9,13 @@ import Image from "next/image";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import Spinner from "@/components/ui/spinner";
+
 
 const EquipmentbyId = () => {
-  const { equipment } = useAppSelector((state) => state.equipments);
+  const { equipment ,isLoading} = useAppSelector((state) => state.equipments);
+  console.log(equipment);
+  
   const dispatch = useAppDispatch();
   const [adress, setAdress] = useState<string>("");
   const { id } = useParams();
@@ -32,12 +36,16 @@ const EquipmentbyId = () => {
     }
   };
 
+  if (isLoading) {
+    return <Spinner/>
+  }
+
   return (
     <div className="flex w-full justify-center items-center sm:mt-7 mb-8 sm:mb-1 p-7 ">
       <div className="flex flex-col sm:flex-row justify-center items-center max-w-5xl bg-white shadow-lg rounded-2xl p-6">
         <div>
           <Image
-            src={equipment?.image ? equipment.image : "/Equipment image.png"}
+            src={equipment?.image ?? "/default-image.png"}
             alt="Equipment image"
             width={900}
             height={400}

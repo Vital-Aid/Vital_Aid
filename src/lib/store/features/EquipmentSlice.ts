@@ -5,14 +5,14 @@ import axiosErrorManager from "@/utils/axiosErrormanager";
 
 
 export interface Equipment {
-    _id: string;
-    name: string;
-    image: string;
-    quantity: number;
-    description: string;
-    isDeleted: boolean;
-    createdAt: string;
-    updatedAt: string;
+  _id: string;
+  name: string;
+  image: string ;
+  quantity: number;
+  description: string;
+  isDeleted: boolean;
+  createdAt: string;
+  updatedAt: string;
 }
 
 interface EquipmentState {
