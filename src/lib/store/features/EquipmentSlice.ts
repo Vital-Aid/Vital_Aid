@@ -48,7 +48,7 @@ export const addnewEquipment = createAsyncThunk<
 >(
     'addequipment',
     async (formvalue, { rejectWithValue }) => {
-        console.log("data", formvalue);
+        
 
         try {
             const response = await axiosInstance.post('/equipment/addequipment', formvalue);
