@@ -10,12 +10,13 @@ import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import Spinner from "@/components/ui/spinner";
+import { useRouter } from "next/navigation";
 
 
 const EquipmentbyId = () => {
   const { equipment ,isLoading} = useAppSelector((state) => state.equipments);
   console.log(equipment);
-  
+  const router=useRouter()
   const dispatch = useAppDispatch();
   const [adress, setAdress] = useState<string>("");
   const { id } = useParams();
@@ -23,13 +24,15 @@ const EquipmentbyId = () => {
     dispatch(getEquipmentById(id as string));
   }, [dispatch, id]);
 
-  const makeRequest = async () => {
+  const makeRequest = async (e: { preventDefault: () => void; }) => {
+    e.preventDefault();
     try {
       await axiosInstance.post("/users/addrequest", {
         equipment: id,
         location: adress,
       });
       toast.success("Equipment Requested+");
+      router.push("/user/equipments");
     } catch (error) {
       console.log("req error:", error);
       axiosErrorManager(error);
@@ -57,7 +60,7 @@ const EquipmentbyId = () => {
             {equipment?.name}
           </h2>
           <p className="text-gray-500">
-            Available: <span className="font-bold">5</span>
+            Available: <span className="font-bold">{equipment?.quantity}</span>
           </p>
           <h3 className="text-lg font-bold mt-2">
             {` Free ${equipment?.name} Support for Those in Need`}
