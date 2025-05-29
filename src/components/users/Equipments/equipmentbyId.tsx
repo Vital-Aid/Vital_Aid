@@ -9,10 +9,11 @@ import Image from "next/image";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import Spinner from "@/components/ui/spinner";
 
 
 const EquipmentbyId = () => {
-  const { equipment } = useAppSelector((state) => state.equipments);
+  const { equipment ,isLoading} = useAppSelector((state) => state.equipments);
   console.log(equipment);
   
   const dispatch = useAppDispatch();
@@ -34,6 +35,10 @@ const EquipmentbyId = () => {
       axiosErrorManager(error);
     }
   };
+
+  if (isLoading) {
+    return <Spinner/>
+  }
 
   return (
     <div className="flex w-full justify-center items-center sm:mt-7 mb-8 sm:mb-1 p-7 ">
