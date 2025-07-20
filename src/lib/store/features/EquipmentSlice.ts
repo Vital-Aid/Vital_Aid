@@ -5,14 +5,14 @@ import axiosErrorManager from "@/utils/axiosErrormanager";
 
 
 export interface Equipment {
-    _id: string;
-    name: string;
-    image: string;
-    quantity: number;
-    description: string;
-    isDeleted: boolean;
-    createdAt: string;
-    updatedAt: string;
+  _id: string;
+  name: string;
+  image: string ;
+  quantity: number;
+  description: string;
+  isDeleted: boolean;
+  createdAt: string;
+  updatedAt: string;
 }
 
 interface EquipmentState {
@@ -48,7 +48,7 @@ export const addnewEquipment = createAsyncThunk<
 >(
     'addequipment',
     async (formvalue, { rejectWithValue }) => {
-        console.log("data", formvalue);
+        
 
         try {
             const response = await axiosInstance.post('/equipment/addequipment', formvalue);

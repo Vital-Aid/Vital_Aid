@@ -9,9 +9,14 @@ import Image from "next/image";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import Spinner from "@/components/ui/spinner";
+import { useRouter } from "next/navigation";
+
 
 const EquipmentbyId = () => {
-  const { equipment } = useAppSelector((state) => state.equipments);
+  const { equipment ,isLoading} = useAppSelector((state) => state.equipments);
+  console.log(equipment);
+  const router=useRouter()
   const dispatch = useAppDispatch();
   const [adress, setAdress] = useState<string>("");
   const { id } = useParams();
@@ -19,25 +24,31 @@ const EquipmentbyId = () => {
     dispatch(getEquipmentById(id as string));
   }, [dispatch, id]);
 
-  const makeRequest = async () => {
+  const makeRequest = async (e: { preventDefault: () => void; }) => {
+    e.preventDefault();
     try {
       await axiosInstance.post("/users/addrequest", {
         equipment: id,
         location: adress,
       });
       toast.success("Equipment Requested+");
+      router.push("/user/equipments");
     } catch (error) {
       console.log("req error:", error);
       axiosErrorManager(error);
     }
   };
 
+  if (isLoading) {
+    return <Spinner/>
+  }
+
   return (
     <div className="flex w-full justify-center items-center sm:mt-7 mb-8 sm:mb-1 p-7 ">
       <div className="flex flex-col sm:flex-row justify-center items-center max-w-5xl bg-white shadow-lg rounded-2xl p-6">
         <div>
           <Image
-            src={equipment?.image ? equipment.image : "/Equipment image.png"}
+            src={equipment?.image ?? "/default-image.png"}
             alt="Equipment image"
             width={900}
             height={400}
@@ -49,7 +60,7 @@ const EquipmentbyId = () => {
             {equipment?.name}
           </h2>
           <p className="text-gray-500">
-            Available: <span className="font-bold">5</span>
+            Available: <span className="font-bold">{equipment?.quantity}</span>
           </p>
           <h3 className="text-lg font-bold mt-2">
             {` Free ${equipment?.name} Support for Those in Need`}
