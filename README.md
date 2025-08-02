@@ -1,3 +1,4 @@
+
 # VitalAid 🏥
 
 **VitalAid** is a comprehensive Health Care Management Application built as a **Team Project** between **January 2025 – February 2025**.  
@@ -60,5 +61,3 @@ It streamlines healthcare operations by providing modern, real-time features for
 - [Your Team Member 1](https://github.com/yourprofile)
 - [Your Team Member 2](https://github.com/yourprofile)
 - [Your Team Member 3](https://github.com/yourprofile)
-
----
